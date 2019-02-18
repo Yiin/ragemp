@@ -1,0 +1,6 @@
+node_modules/
+packages/
+.vscode/
+.hot/
+saved-positions.txt
+.env
