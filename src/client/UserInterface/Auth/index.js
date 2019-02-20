@@ -2,13 +2,7 @@ import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 
 import Auth from './Auth';
-import { Context, ContextProvider } from './context';
-
-window.dispatch = (type, payload) => {
-    const [dispatch] = useContext(Context);
-
-    dispatch({ type, payload });
-};
+import { ContextProvider } from './context';
 
 ReactDOM.render(
     <ContextProvider>

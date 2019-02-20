@@ -6,15 +6,12 @@ const initialState = {
     scene: 'login',
     username: '',
     password: '',
-    validation: [],
+    error: false,
 };
 
-function parseValidation(state, validation) {
-    const [, form, field, error] = /(.+)\.(.+):(.+)/.exec(validation);
-    return [
-        ...state,
-        { form, field, error },
-    ];
+function parseError(error) {
+    const [, form, field, message] = /(.+)\.(.+):(.+)/.exec(error);
+    return { form, field, message };
 }
 
 const reducer = (state, action) => {
@@ -22,26 +19,22 @@ const reducer = (state, action) => {
         'set-scene': scene => ({
             ...state,
             scene,
+            error: false,
         }),
-        'set-username': username => ({
+        'set-error': error => ({
             ...state,
-            username: action.payload,
+            error: typeof error === 'string'
+                ? parseError(error)
+                : error,
         }),
-        'set-password': password => ({
-            ...state,
-            password: action.payload,
-        }),
-        'validation': validation => ({
-            ...state,
-            validation: typeof validation === 'string'
-                ? parseValidation(validation)
-                : validation,
-        })
     })[action.type] || (() => state))(action.payload);
 };
 
 function ContextProvider({ children }) {
     const [state, dispatch] = React.useReducer(reducer, initialState);
+
+    window.dispatch = (type, payload) => dispatch({ type, payload });
+
     const value = { state, dispatch };
 
     return (

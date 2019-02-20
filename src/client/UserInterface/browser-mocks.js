@@ -1,0 +1,3 @@
+window.mp = {
+    trigger() {},
+};

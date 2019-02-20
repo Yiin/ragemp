@@ -24,31 +24,66 @@ export default class AuthModule {
         player.call('showScene.auth');
     }
 
-    @handleEvent('handleRegistration')
+    @handleEvent('playerRegistration')
     async handleRegistration(player: PlayerMp, username, password, email) {
-        console.log('handleRegistration', player.name, username, password, email);
-
-        const existingPlayer = await this.users.findOne({
+        const existingUser = await this.users.findOne({
             username,
         });
 
-        if (existingPlayer) {
+        if (existingUser && existingUser.username === username) {
             return player.call('auth.response', [
                 'error',
-                'registration.username:ALREADY_EXISTS',
+                'registration.username:Username is already taken.',
             ]);
         }
 
-        const user = await this.users.create({
+        const user = await this.users.save({
             username,
-            password: bcrypt.hashSync(password, 10),
+            password: await bcrypt.hash(password, 10),
             email,
         });
-        player.data.userId = user.id;
+
+        try {
+            player.setVariable('userId', user.id);
+        } catch (e) {
+            console.log(e);
+        }
 
         player.call('auth.response', [
             'success',
+            'registration',
+            username,
         ]);
+    }
+
+    @handleEvent('playerLogin')
+    async handleLogin(player: PlayerMp, username, password) {
+        const user = await this.users.findOne({
+            username,
+        });
+
+        if (!user) {
+            return player.call('auth.response', [
+                'error',
+                'login.username:Username is not registered',
+            ]);
+        }
+
+        const passwordsMatch = bcrypt.compare(password, user.password!);
+
+        if (!passwordsMatch) {
+            return player.call('auth.response', [
+                'error',
+                'login.password:Password does not match',
+            ]);
+        }
+
+        player.call('auth.response', [
+            'success',
+            'login',
+        ]);
+
+        // mp.events.call('')
     }
 
     async login(player: PlayerMp) {
@@ -57,7 +92,6 @@ export default class AuthModule {
         // player.data.id = player.id;
     }
 
-    
     async register(player: PlayerMp) {        
         // const player = new Player();
         // player.name = player.name;

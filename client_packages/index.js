@@ -81,21 +81,21 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 20:
+/***/ 21:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 /// <reference node="ragemp-c">
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(21);
 __webpack_require__(22);
-__webpack_require__(24);
+__webpack_require__(23);
+__webpack_require__(25);
 mp.keys.bind(0x71, false, function () {
     var shouldShow = !mp.gui.cursor.visible;
     mp.gui.cursor.show(shouldShow, shouldShow);
@@ -104,7 +104,7 @@ mp.keys.bind(0x71, false, function () {
 
 /***/ }),
 
-/***/ 21:
+/***/ 22:
 /***/ (function(module, exports) {
 
 const controlsIds = {
@@ -249,26 +249,13 @@ mp.events.add('getCamCoords', (name) => {
 
 /***/ }),
 
-/***/ 22:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(23);
-
-
-/***/ }),
-
 /***/ 23:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-mp.events.add('fromBrowser.log', function (text) {
-    mp.gui.chat.push('DEBUG: ' + text);
-    mp.events.callRemote('log', text);
-});
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(24);
 
 
 /***/ }),
@@ -279,32 +266,65 @@ mp.events.add('fromBrowser.log', function (text) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var ui_1 = __webpack_require__(25);
+var ui_1 = __webpack_require__(4);
+mp.events.add('fromBrowser.console', function (text) {
+    var args = JSON.parse(text).join(', ');
+    mp.gui.chat.push('DEBUG: ' + args);
+    mp.events.callRemote('log', args);
+});
 mp.events.add('ui', function (name) {
-    mp.gui.chat.push('Rodom ui: ' + name);
     ui_1.ui.show(name);
-});
-mp.events.add('showScene.auth', function () {
-    ui_1.ui.show('Auth');
-});
-mp.events.add('fromBrowser.handleRegistration', function (username, password, email) {
-    mp.events.callRemote('handleRegistration', username, password, email);
-});
-mp.events.add('auth.response', function (status, data) {
-    if (status === 'success') {
-        ui_1.ui.browser.destroy();
-        mp.game.graphics.notify('~g~Sėkmingai užsiregistravai!');
-    }
-    else {
-        ui_1.ui.browser.execute("dispatch('validation', '" + data + "')");
-        mp.game.graphics.notify('~r~Validation error!');
-    }
 });
 
 
 /***/ }),
 
 /***/ 25:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ui_1 = __webpack_require__(4);
+mp.events.add('showScene.auth', function () {
+    ui_1.ui.show('Auth');
+});
+mp.events.add('fromBrowser.handleRegistration', function (username, password, email) {
+    mp.events.callRemote('playerRegistration', username, password, email);
+});
+mp.events.add('fromBrowser.handleLogin', function (username, password) {
+    mp.events.callRemote('playerLogin', username, password);
+});
+mp.events.add('auth.response', function (status, payload) {
+    if (status === 'success') {
+        switch (payload) {
+            case 'login':
+                ui_1.ui.hide();
+                mp.game.graphics.notify('~b~Welcome back!');
+                break;
+            case 'registration':
+                ui_1.ui.dispatch('set-scene', 'login');
+                mp.game.graphics.notify('~g~Registration was successful!');
+                break;
+        }
+    }
+    else {
+        ui_1.ui.dispatch('validation', payload);
+        var result = /:(.+)/.exec(payload);
+        if (result) {
+            var error = result[1];
+            mp.game.graphics.notify("~r~" + error + "!");
+        }
+        else {
+            mp.game.graphics.notify("~r~Unknown error: " + payload);
+        }
+    }
+});
+
+
+/***/ }),
+
+/***/ 4:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -327,6 +347,18 @@ var UIManager = /** @class */ (function () {
             this.browser.url = indexFile;
         }
         mp.gui.cursor.show(true, true);
+    };
+    UIManager.prototype.hide = function () {
+        this.browser.destroy();
+        this.browser = null;
+        mp.gui.cursor.show(false, false);
+    };
+    UIManager.prototype.dispatch = function (eventType, payload) {
+        if (!this.browser) {
+            mp.gui.chat.push('no browser, rip');
+            return;
+        }
+        this.browser.execute("window.dispatch('" + eventType + "', '" + payload + "');");
     };
     return UIManager;
 }());

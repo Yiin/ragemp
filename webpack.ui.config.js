@@ -13,7 +13,7 @@ const browsers = dirs('src/client/UserInterface').reduce((entries, dir) => {
     return [...entries, folderName];
 }, []);
 
-module.exports = {
+module.exports = ({ browser } = {}) => ({
     resolve: {
         extensions: ['.js'],
     },
@@ -22,8 +22,9 @@ module.exports = {
             ...entries,
             [`client_packages/UserInterface/${name}`]: [
                 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+                browser && './src/client/UserInterface/browser-mocks.js',
                 `./src/client/UserInterface/${name}/index.js`,
-            ],
+            ].filter(Boolean),
         }), {}),
     },
     output: {
@@ -35,7 +36,6 @@ module.exports = {
     target: 'web',
     optimization: {
         splitChunks: {
-            // include all types of chunks
             cacheGroups: {
                 vendor: {
                     chunks: 'initial',
@@ -86,4 +86,4 @@ module.exports = {
             },
         ],
     },
-};
+});

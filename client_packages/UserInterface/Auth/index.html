@@ -16,7 +16,7 @@
     <div id="main"></div>
     <script>
         window.debug = (...args) => {
-            mp.trigger('browserConsole', ...args);
+            mp.trigger('fromBrowser.console', JSON.stringify(args));
         };
     </script>
     <script src="bundle.js" type="text/javascript"></script>

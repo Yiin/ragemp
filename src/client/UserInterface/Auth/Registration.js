@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import RegistrationIcon from '@material-ui/icons/KeyboardArrowRight';
 
-import { tryToRegister } from './api';
 import { Context } from './context';
+import { submitForm } from './api';
 
 const styles = () => ({
     root: {
@@ -26,7 +26,7 @@ const styles = () => ({
 });
 
 const Registration = ({ classes }) => {
-    const { state } = useContext(Context);
+    const { state, dispatch } = useContext(Context);
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     const [ email, setEmail ] = useState('');
@@ -35,18 +35,11 @@ const Registration = ({ classes }) => {
     const handlePasswordChange = e => setPassword(e.target.value);
     const handleEmailChange = e => setEmail(e.target.value);
 
-    const handleSubmit = () => tryToRegister({
-        username,
-        password,
-        email,
-    });
+    const handleSubmit = () => submitForm('Registration', username, password, email);
 
-    const validationErrors = state.validation
-        .filter(({ form }) => form === 'registration')
-        .reduce((map, { field, error }) => ({
-            ...map,
-            [field]: error,
-        }), {});
+    const validationError = state.error && state.error.form === 'registration'
+        ? { [state.error.field]: state.error.message }
+        : {};
 
     return (
         <div className={ classes.root }>
@@ -66,9 +59,10 @@ const Registration = ({ classes }) => {
                 label="Username"
                 margin="dense"
                 variant="outlined"
-                error={ validationErrors.username }
-                helperText={ validationErrors.username }
+                error={ !!validationError.username }
+                helperText={ validationError.username }
             />
+
             <TextField
                 value={ password }
                 onChange={ handlePasswordChange }

@@ -1,6 +1,4 @@
 import fs from 'fs';
-import { getRepository } from 'typeorm';
-import { Player } from '../entity';
 
 mp.events.addCommand('car', (player, model) => {
     player.putIntoVehicle(
@@ -29,6 +27,9 @@ mp.events.addCommand('savepos', (player, name) => {
 });
 
 mp.events.addCommand('ui', (playerMp, ui) => {
-    console.log('ui', ui);
     playerMp.call('ui', [ui]);
+});
+
+mp.events.addCommand('ped', (player, type, hash) => {
+    player.call('ped.create', [type, hash]);
 });

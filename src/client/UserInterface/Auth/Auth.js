@@ -16,12 +16,13 @@ const styles = theme => ({
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     window: {
         ...theme.mixins.gutters(),
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
+        marginTop: '15%',
     },
     tabsRoot: {
         borderBottom: '1px solid #e8e8e8',

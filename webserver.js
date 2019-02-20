@@ -4,7 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const webpackConfig = require('./webpack.ui.config');
+const webpackConfig = require('./webpack.ui.config')({ browser: true });
 
 const app = express();
 const compiler = webpack({
@@ -19,13 +19,13 @@ app.use('/.hot', express.static(path.join(__dirname, '.hot')));
 
 
 const dirs = p => fs.readdirSync(p).filter(f => fs.statSync(path.join(p, f)).isDirectory());
-const browsers = dirs('src/client/Browsers').reduce((entries, dir) => [
+const browsers = dirs('src/client/UserInterface').reduce((entries, dir) => [
     ...entries,
     path.basename(dir)
 ], []);
 
 browsers.forEach(page => {
-    const dir = path.resolve(__dirname, `client_packages/Browsers/${page}`);
+    const dir = path.resolve(__dirname, `client_packages/UserInterface/${page}`);
 
     const devMiddleware = webpackDevMiddleware(compiler, {
         noInfo: true,
@@ -41,7 +41,7 @@ browsers.forEach(page => {
     app.use(express.static(dir));
 
     app.get(`/${page}`, (req, res) =>
-        res.sendFile(path.resolve(__dirname, `./client_packages/Browsers/${page}/index.html`))
+        res.sendFile(path.resolve(__dirname, `./client_packages/UserInterface/${page}/index.html`))
     );
 });
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -6,6 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import LoginIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import { Context } from './context';
+import { submitForm } from './api';
 
 const styles = () => ({
     root: {
@@ -25,10 +26,18 @@ const styles = () => ({
 });
 
 const Login = ({ classes }) => {
-    const { state, dispatch } = useContext(Context);
+    const { state } = useContext(Context);
+    const [ username, setUsername ] = useState('');
+    const [ password, setPassword ] = useState('');
 
-    const setUsername = e => dispatch({ type: 'set-username', payload: e.target.value });
-    const setPassword = e => dispatch({ type: 'set-password', payload: e.target.value });
+    const handleUsernameChange = e => setUsername(e.target.value);
+    const handlePasswordChange = e => setPassword(e.target.value);
+
+    const handleSubmit = () => submitForm('Login', username, password);
+
+    const validationError = state.error && state.error.form === 'login'
+        ? { [state.error.field]: state.error.message }
+        : {};
 
     return (
         <div className={ classes.root }>
@@ -43,23 +52,28 @@ const Login = ({ classes }) => {
             </div>
 
             <TextField
-                value={ state.username }
-                onChange={ setUsername }
+                value={ username }
+                onChange={ handleUsernameChange }
                 label="Username"
                 margin="dense"
                 variant="outlined"
+                error={ validationError.username }
+                helperText={ validationError.username }
             />
 
             <TextField
-                value={ state.password }
-                onChange={ setPassword }
+                value={ password }
+                onChange={ handlePasswordChange }
                 type="password"
                 label="Password"
                 margin="dense"
                 variant="outlined"
+                error={ validationError.password }
+                helperText={ validationError.password }
             />
 
             <Button
+                onClick={ handleSubmit }
                 variant="contained"
                 color="primary"
                 classes={ {
