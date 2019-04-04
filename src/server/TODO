@@ -1,0 +1,75 @@
+General:
+  ☐ Use external error logging instead of console.log() @started(19-04-04 18:36)
+    Possible option: Sentry
+    ✔ Client side @done(19-04-04 22:50)
+    ☐ Server side
+    ☐ CEF
+Auth:
+  Login:
+    ✔ Remember me box @done(19-03-25 02:10)
+Character Creation:
+  ✔ Camera @done(19-03-25 02:16)
+    Using WASD keys, player should be able to rotate camera around characters face. Character should be displayed slightly on the left side of the screen (because UI is located on the right side.
+  ✔ Do not rotate camera when user is doing other things (like typing into input box). @done(19-03-26 20:46)
+  ✔ Change Appearance values from None to Default and add the actual None (id: 255) @done(19-03-26 22:49)
+  ✔ Remove some of the attributes (to leave as unlockable content for the rest of the game) @done(19-03-28 00:26)
+    ✔ Splinter cell-ish hair style @done(19-03-27 23:39)
+    ✔ Exotic hair styles @done(19-03-27 23:40)
+    ✔ Extremely bright hair colors @done(19-03-27 23:57)
+    ✔ Unnatural beard colors @done(19-03-27 23:57)
+    ✔ Fantasy eye colors @done(19-03-28 00:04)
+    ✔ Unnatural blush colors @done(19-03-28 00:26)
+    ✔ Colorful chest hair colors @done(19-03-27 23:57)
+  ✔ Upon clicking [Create] button, player should be provided with dialog box with name input that once submitted, will create a new character and redirect player to Character Selection scene. @done(19-03-28 01:31)
+    ✔ Input dialog @done(19-03-26 22:49)
+    ✔ SS Name validation @done(19-03-28 01:31)
+    ✔ Save character data to database @done(19-03-28 01:31)
+    ✔ Show Character Selection scene @done(19-03-28 01:31)
+    ✔ Randomize all features button doesn't work. @done(19-03-28 23:48)
+Character Selection:
+  ☐ When possible, fetch data directly from the server, do not pass it through arguments forward and back.
+    ✔ Characters list in Character Selection Scene. @done(19-03-30 01:38)
+    ✔ Characters list in Character Selection UI. @done(19-03-30 01:38)
+    ☐ Currently selected character info in Character Selection Scene.
+  ✔ List available characters @done(19-04-01 03:29)
+  ✔ Preview selected character @done(19-04-01 03:29)
+  ☐ Update characters list after creating one
+    Server currently returns cached data (before character was created).
+  ☐ Ability to delete selected character
+  ☐ Start the game with selected character
+Refactoring:
+  ✔ Separate files by their function instead of domain. @done(19-04-01 21:37)
+    ✔ modules/auth -> scenes/auth @done(19-04-01 03:29)
+    ✔ modules/character-selection -> scenes/character-selection @done(19-04-01 03:29)
+    ✔ modules/user -> repositories/player @done(19-04-01 19:33)
+    ✔ modules/player -> rpc/player @done(19-04-01 19:54)
+    ✔ modules/debug -> debug @done(19-04-01 20:27)
+  ✔ Restructure & rename shared folder @done(19-04-02 01:37)
+    ✔ RPCs @done(19-04-02 01:37)
+      ✔ Server @done(19-04-01 19:46)
+      ✔ Client @done(19-04-02 01:37)
+    ✔ Player variables @done(19-04-01 19:46)
+  ✔ Restructure & rename enums @done(19-04-02 01:37)
+    ✔ enums/ -> constants/ @done(19-04-01 19:27)
+    ✔ Enum -> ServerEnum (or ClientEnum) @done(19-04-02 01:37)
+      ✔ Server @done(19-04-01 19:27)
+      ✔ Client @done(19-04-02 01:37)
+  ✔ Repositories @done(19-04-01 03:28)
+    ✔ User @done(19-04-01 03:28)
+      ✔ Map user.id to playerMp.id @done(19-04-01 03:28)
+      ✔ Resolve User using PlayersRepository.getUser(playerMp.id) @done(19-04-01 03:28)
+  ✔ Entities @done(19-04-01 03:28)
+    ✔ Lazy loaded relations @done(19-04-01 03:28)
+      ✔ User -> Characters[] @done(19-04-01 03:28)
+      ✔ Character -> User @done(19-04-01 03:28)
+  ✔ Better client side scene management @started(19-04-02 01:48) @done(19-04-04 18:04) @lasted(2d16h16m38s)
+    Currently there can only be a single active scene. That's not reasonable moving forward, because there will be more than one independant UI element on the screen.
+    ✔ Update UI manager to support multiple scenes. @done(19-04-02 01:43)
+    ✔ Update scenes to handle events by themselves instead of relying on outside calls. @done(19-04-04 18:03)
+      ✔ Remove scene manager as this change would make it obsolete. @done(19-04-04 18:03)
+      ✔ Auth scene @done(19-04-02 01:44)
+      ✔ Character selection scene @done(19-04-04 18:02)
+      ✔ Character creation scene @done(19-04-04 18:02)
+  ✔ Use `inversify` for client side module management. @done(19-04-02 01:48)
+  ✔ Update UI import paths. @done(19-04-04 18:18)
+  ✔ Fix loading of client side modules @done(19-04-04 23:32)

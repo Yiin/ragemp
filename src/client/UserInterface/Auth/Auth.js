@@ -1,15 +1,19 @@
 import React, { useContext } from 'react';
 import { hot } from 'react-hot-loader/root';
 
-import { withStyles } from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import Login from './Login';
-import Registration from './Registration';
+import Login from './tabs/Login';
+import Registration from './tabs/Registration';
 
-import { Context } from './context';
+import { Context } from '.';
+import { setScene, setLoginErrors, setRegistrationErrors } from './asm';
+import { MuiThemeProvider } from '@material-ui/core';
+
+import { theme } from '../_theme';
 
 const styles = theme => ({
     root: {
@@ -24,46 +28,55 @@ const styles = theme => ({
         paddingBottom: theme.spacing.unit * 2,
         marginTop: '15%',
     },
-    tabsRoot: {
-        borderBottom: '1px solid #e8e8e8',
-    },
-    tabsIndicator: {
-        backgroundColor: '#1890ff',
-    },
 });
 
 const Auth = ({ classes }) => {
     const { state, dispatch } = useContext(Context);
 
-    const setScene = (e, scene) => dispatch({ type: 'set-scene', payload: scene });
+    const handleSceneChange = (e, scene) => {
+        if (scene !== state.scene) {
+            switch (scene) {
+                case 'login':
+                    dispatch(setLoginErrors({
+                        username: 'Some error message',
+                    }));
+                    break;
+                case 'registration':
+                    dispatch(setRegistrationErrors(null));
+                    break;
+            }
+            dispatch(setScene(scene));
+        }
+    };
 
     return (
-        <div className={ classes.root }>
-            <Paper className={ classes.window }>
-                <Tabs
-                    value={ state.scene }
-                    onChange={ setScene }
-                    classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-                >
-                    <Tab
-                        disableRipple
-                        classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                        label="Login"
-                        value="login"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                        label="Register"
-                        value="registration"
-                    />
-                </Tabs>
-                { ({
-                    login: () => <Login />,
-                    registration: () => <Registration />,
-                })[state.scene]() }
-            </Paper>
-        </div>
+        <MuiThemeProvider theme={ theme }>
+            <div className={ classes.root }>
+                <Paper className={ classes.window }>
+                    <Tabs
+                        value={ state.scene }
+                        onChange={ handleSceneChange }
+                        textColor="primary"
+                        indicatorColor="primary"
+                    >
+                        <Tab
+                            disableRipple
+                            label="Login"
+                            value="login"
+                        />
+                        <Tab
+                            disableRipple
+                            label="Register"
+                            value="registration"
+                        />
+                    </Tabs>
+                    { ({
+                        login: () => <Login />,
+                        registration: () => <Registration />,
+                    })[state.scene]() }
+                </Paper>
+            </div>
+        </MuiThemeProvider>
     );
 }
 

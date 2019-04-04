@@ -1,0 +1,48 @@
+{
+    "defaultSeverity": "warning",
+    "extends": ["tslint-import-group-ordering"],
+    "rules": {
+        "import-group-ordering": {
+            "severity": "warning",
+            "options": {
+                "imports-groups": [
+                    {
+                        "name": "dependencies"
+                    },
+                    {
+                        "name": "aliases"
+                    },
+                    {
+                        "name": "root"
+                    },
+                    {
+                        "name": "other"
+                    }
+                ],
+                "matching-rules": [
+                    {
+                        "type": "dependencies",
+                        "imports-group": "dependencies",
+                        "disable-native-nodejs-modules": true,
+                        "from-package.json": true
+                    },
+                    {
+                        "type": "project",
+                        "matches": "^[A-Z]",
+                        "import-group": "aliases"
+                    },
+                    {
+                        "type": "project",
+                        "matches": "^~",
+                        "import-group": "root"
+                    },
+                    {
+                        "type": "project",
+                        "matches": ".*",
+                        "imports-group": "other"
+                    }
+                ]
+            }
+        }
+    }
+}

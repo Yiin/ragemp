@@ -1,4 +1,5 @@
 node_modules/
+client_packages/
 packages/
 .vscode/
 .hot/

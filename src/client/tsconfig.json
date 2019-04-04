@@ -1,6 +1,17 @@
 {
-  "extends": "../../tsconfig.json",
-  "exclude": [
-    "node_modules/@types/ragemp-s/*.ts"
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./src/*"],
+      "Shared/*": ["../shared/*"]
+    }
+  },
+  "include": [
+    "./**/*.tsx",
+    "./**/*.ts",
+    "../shared/**/*.ts",
+    "./**/!(browser).d.ts"
   ]
 }
