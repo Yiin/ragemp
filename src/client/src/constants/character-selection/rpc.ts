@@ -7,4 +7,5 @@ export const enum CharacterSelectionRPC {
     CREATE_CHARACTER = 'createCharacter',
     SELECT_CHARACTER = 'selectCharacter',
     DELETE_CHARACTER = 'deleteCharacter',
+    START_GAME = 'startGame',
 };

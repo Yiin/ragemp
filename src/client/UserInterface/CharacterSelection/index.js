@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
-import * as luxon from 'luxon';
-
-window.luxon = luxon;
 
 import CharacterSelection from './CharacterSelection';
+import PlayButton from './components/PlayButton';
 
 ReactDOM.render(
-    <CharacterSelection />
+    <Fragment>
+        <CharacterSelection />
+        <PlayButton />
+    </Fragment>
 , document.getElementById('main'));

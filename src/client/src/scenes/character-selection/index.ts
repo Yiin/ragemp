@@ -13,9 +13,7 @@ import PlayerManager from '~/managers/player';
 import { hookEvent } from '~/utils/hook-event';
 import { handleRPC } from '~/utils/handle-rpc';
 import { bind } from '~/container';
-import { log } from '~/debug';
 import { handleEvent } from '~/utils/handle-event';
-import { CharacterCreationConstants } from '~/constants/character-creation';
 
 const CAMERA_POSITION = new mp.Vector3(1510.9, -1731, 78.5);
 const CHARACTER_POSITION = new mp.Vector3(1507.9, -1732.3, 78.65);
@@ -24,6 +22,7 @@ const CHARACTER_POSITION = new mp.Vector3(1507.9, -1732.3, 78.65);
 @injectable()
 export default class CharacterSelectionScene {
     private player: PlayerMp;
+    private selectedCharacterId: number;
     private cameraHorizontalOffset = 0;
     private camera: SerializedCameraMp = CameraManager.createCamera(
         'characterSelectionCam',
@@ -118,6 +117,8 @@ export default class CharacterSelectionScene {
         register(
             CharacterSelectionConstants.RPC.SELECT_CHARACTER,
             async (characterId: number) => {
+                this.selectedCharacterId = characterId;
+
                 const { appearance }: Character = await callServer(
                     SharedConstants.User.RPC.GET_CHARACTER,
                     characterId
@@ -142,6 +143,16 @@ export default class CharacterSelectionScene {
                 })
             }
         );
+
+        register(
+            CharacterSelectionConstants.RPC.START_GAME,
+            async () => {
+                callServer(
+                    SharedConstants.CharacterSelection.RPC.START_GAME,
+                    this.selectedCharacterId
+                );
+            },
+        )
 
         UIManager.show('CharacterSelection');
 
@@ -181,6 +192,7 @@ export default class CharacterSelectionScene {
         );
     }
 
+    @handleEvent(SharedConstants.Game.Events.GAME_STARTED)
     @handleRPC(CharacterSelectionConstants.RPC.END_CHARACTER_SELECTON_SCENE)
     end() {
         mp.gui.cursor.show(false, false);
@@ -191,6 +203,8 @@ export default class CharacterSelectionScene {
         
         this.unhookRender();
         this.camera.setActiveCamera(false);
+        this.player.setInvincible(false);
+        this.player.freezePosition(false);
 
         UIManager.hide('CharacterSelection');
     }

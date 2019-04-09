@@ -48,4 +48,33 @@ export default class CharacterSelectionModule {
             }),
         );
     }
+
+    @RPC(SharedConstants.CharacterSelection.RPC.START_GAME)
+    async startGame(characterId: number, { player: playerMp }: PLI) {
+        const user = await this.playersRepository.getUser(playerMp);
+
+        if (!user) {
+            return;
+        }
+
+        const character = (await user.characters)
+            .find(character => character.id === characterId);
+
+        if (!character) {
+            return;
+        }
+
+        playerMp.setVariable(SharedConstants.PlayerVariables.CHARACTER_ID, characterId);
+
+        if (!character.x && !character.y && !character.z) {
+            Object.assign(character, {
+                x: 155,
+                y: 6634.86,
+                z: 31.62,
+                heading: 88.9
+            });
+        }
+        playerMp.spawn(new mp.Vector3(character.x, character.y, character.z));
+        playerMp.call(SharedConstants.Game.Events.GAME_STARTED);
+    }
 }

@@ -50,9 +50,6 @@ export default new class PlayerManager {
             value: number,
             opacity: number
         }>(headOverlays).forEach(({ value, opacity }, overlayId) => {
-            if (+overlayId === 1) {
-                mp.gui.chat.push(`${value}:${opacity}`);
-            }
             this.player.setHeadOverlay(
                 overlayId,
                 value,

@@ -5,12 +5,14 @@ General:
     ☐ Server side
     ☐ CEF
   ☐ Setup server side debugging (for VS Code)
+  ☐ Command to go back to character selection.
 Auth:
   Login:
     ✔ Remember me box @done(19-03-25 02:10)
 Character Creation:
-  ✔ Camera @done(19-03-25 02:16)
-    Using WASD keys, player should be able to rotate camera around characters face. Character should be displayed slightly on the left side of the screen (because UI is located on the right side.
+  ☐ Camera
+    ✔ Using WASD keys, player should be able to rotate camera around characters face. Character should be displayed slightly on the left side of the screen (because UI is located on the right side. @done(19-04-09 22:57)
+    ☐ Would be nice to have some kind of acceleration for camera movements.
   ✔ Do not rotate camera when user is doing other things (like typing into input box). @done(19-03-26 20:46)
   ✔ Change Appearance values from None to Default and add the actual None (id: 255) @done(19-03-26 22:49)
   ✔ Remove some of the attributes (to leave as unlockable content for the rest of the game) @done(19-03-28 00:26)
@@ -30,6 +32,7 @@ Character Creation:
     ✔ Show mouse cursor in character selection scene @done(19-04-08 20:51)
     ✔ Game freezes after clicking [create] button. @done(19-04-08 23:25)
     ✔ Character is not assigned to the user. @done(19-04-08 23:03)
+  ☐ Add `Go back` button that forwards player to character selection scene if player has more than zero characters.
 Character Selection:
   ✔ When possible, fetch data directly from the server, do not pass it through arguments forward and back. @done(19-04-08 23:36)
     ✔ Characters list in Character Selection Scene. @done(19-03-30 01:38)
@@ -41,8 +44,8 @@ Character Selection:
     Server currently returns cached data (before character was created).
   ✔ Ability to delete selected character @done(19-04-09 00:33)
   ✔ Fix issue with saved timestamps. @done(19-04-09 01:44)
-  ☐ Create `Play` button.
-  ☐ Start the game with selected character
+  ✔ Create `Play` button. @done(19-04-09 22:54)
+  ✔ Start the game with selected character @done(19-04-09 22:54)
 Refactoring:
   ✔ Separate files by their function instead of domain. @done(19-04-01 21:37)
     ✔ modules/auth -> scenes/auth @done(19-04-01 03:29)
@@ -79,3 +82,9 @@ Refactoring:
   ✔ Use `inversify` for client side module management. @done(19-04-02 01:48)
   ✔ Update UI import paths. @done(19-04-04 18:18)
   ✔ Fix loading of client side modules @done(19-04-04 23:32)
+
+Game start:
+  ☐ Character spawn locations
+    ☐ Train station
+    ☐ Bridge to the sea
+    ☐ Petrol station (with a bus)
