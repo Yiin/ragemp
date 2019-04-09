@@ -36,6 +36,7 @@ export default class CharacterCreationScene {
     @handleRPC(CharacterSelectionConstants.RPC.START_CHARACTER_CREATION_SCENE)
     start() {
         mp.gui.chat.activate(false);
+        mp.gui.cursor.show(true, true);
         this.camera.setActiveCamera(true);
 
         this.player = mp.players.local;
@@ -149,9 +150,15 @@ export default class CharacterCreationScene {
     }
 
     @handleEvent(CharacterCreationConstants.Events.CHARACTER_CREATED)
+    onCharacterCreated() {
+        this.end();
+        rpc.call(CharacterSelectionConstants.RPC.START_CHARACTER_SELECTON_SCENE);
+    }
+
     @handleRPC(CharacterSelectionConstants.RPC.END_CHARACTER_CREATION_SCENE)
     end() {
         mp.gui.chat.activate(true);
+        mp.gui.cursor.show(false, false);
         rpc.unregister(CharacterCreationConstants.RPC.UPDATE_CHARACTER_FEATURES);
 
         this.unhookRender();

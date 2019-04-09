@@ -1,25 +1,34 @@
 import 'core-js/features/reflect';
-import { callServer } from 'rage-rpc';
+import 'rage-rpc';
 
 import './sentry'; // error tracking
 import './vendors/rage-editor';
 import './vendors/fly';
-import { SharedConstants } from 'Shared/constants';
 import { containerPromises } from './container';
+import { log } from './debug';
 
-mp.events.add(SharedConstants.Auth.Events.PLAYER_READY_FOR_AUTHENTICATION, () => {
-    mp.gui.chat.push('Ready for authentication');
+const serverReady = new Promise(resolve => {
+    mp.events.add('serverReady', () => {
+        mp.events.remove('serverReady');
+        resolve();
+    });
 })
 
 const init = async () => {
+    mp.gui.chat.push('init');
     await import('./debug');
     await import('./scenes/auth');
     await import('./scenes/character-creation');
     await import('./scenes/character-selection');
-
+    
+    mp.gui.chat.push('awaiting container promises');
+    log('awaiting container promises');
     await Promise.all(containerPromises);
-
-    callServer('playerInitiated');
+    
+    await serverReady;
+    mp.gui.chat.push('initiating player...');
+    log('initiating player...');
+    mp.events.callRemote('playerInitiated');
 };
 
 init();

@@ -1,5 +1,5 @@
-import { AuthEvents as _AuthEvents } from './auth/events';
+import { AuthConstants } from './auth';
 
 export namespace ServerConstants {
-    export import AuthEvents = _AuthEvents;
+    export import Auth = AuthConstants;
 }

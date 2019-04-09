@@ -35,7 +35,7 @@ export default class PlayersRepository {
         return this.players[playerMp.id];
     }
 
-    @handleEvent(ServerConstants.AuthEvents.USER_LOGIN)
+    @handleEvent(ServerConstants.Auth.Events.USER_LOGIN)
     onUserLogin(playerMp: PlayerMp, user: User): void {
         this.players[playerMp.id] = user.id;
     }

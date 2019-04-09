@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import * as rpc from 'rage-rpc';
+import { DateTime } from 'luxon';
 import { Classes } from 'jss';
 import withStyles, { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
@@ -42,25 +43,47 @@ class CharacterSelection extends PureComponent<Props> {
         selectedCharacterId: 0,
     };
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.loadCharacters();
+    }
+
+    async loadCharacters() {
         const characters = await rpc.callServer(SharedConstants.User.RPC.GET_CHARACTERS);
 
+        console.log('characters', characters);
         this.setState({
             characters,
         });
+
+        if (!characters.length) {
+            this.handleCharacterCreation();
+            return;
+        }
+
+        const lastPlayerCharacter = characters.reduce((lastPlayed, character) => {
+            if (lastPlayed.lastPlayed < character.lastPlayed) {
+                return character;
+            }
+            return lastPlayed;
+        });
+        this.handleCharacterSelect(lastPlayerCharacter.id);
     }
 
     handleCharacterSelect = characterId => {
         if (this.state.selectedCharacterId === characterId) {
             return;
         }
-
+        
         rpc.callClient(CharacterSelectionConstants.RPC.SELECT_CHARACTER, characterId);
         
         this.setState({
             selectedCharacterId: characterId,
         });
     }
+
+    handleCharacterDelete = () => {
+        this.loadCharacters();
+    };
     
     handleCharacterCreation = () => {
         rpc.callClient(CharacterSelectionConstants.RPC.CREATE_CHARACTER);
@@ -80,6 +103,7 @@ class CharacterSelection extends PureComponent<Props> {
                                     key={ character.id }
                                     selected={ character.id === selectedCharacterId }
                                     onClick={ this.handleCharacterSelect }
+                                    onDelete={ this.handleCharacterDelete }
                                     { ...character }
                                 />
                             )) }

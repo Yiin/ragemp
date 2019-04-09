@@ -45,6 +45,8 @@ const init = async () => {
     await import('./scenes/auth');
     await import('./scenes/character-selection');
     // Scenes
+
+    mp.players.call('serverReady');
 };
 
 init();

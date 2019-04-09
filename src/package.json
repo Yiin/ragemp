@@ -1,7 +1,4 @@
 {
-  "name": "server-files",
-  "version": "1.0.0",
-  "description": "",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,7 +10,7 @@
     "start": "node ./build/scripts/overseer.js",
     "web": "node ./build/scripts/webserver.js"
   },
-  "author": "",
+  "author": "yiin",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.3.3",

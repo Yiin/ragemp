@@ -1,8 +1,11 @@
 import { callServer } from 'rage-rpc';
 import { SharedConstants } from 'Shared/constants';
-import { log } from './debug';
 
 export const captureException = e => {
+    mp.gui.chat.push(`[${e.name}] ${e.message}`);
+
+    mp.gui.chat.push(e.stack.split('\n').shift());
+
     callServer(
         SharedConstants.Sentry.RPC.CAPTURE_EXCEPTION,
         {

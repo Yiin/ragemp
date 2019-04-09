@@ -97,16 +97,16 @@ const HairAndColors = ({ classes, history }) => {
     } = state;
 
     const handleHairChange = value =>
-        dispatch(setHair(hairList[gender]
-            .findIndex(({ name }) => name === value)));
+        dispatch(setHair([...hairList[gender].entries()]
+            .find(([key, { name } ]) => name === value)[0]));
     const handleHairColorChange = value => dispatch(setHairColor(value));
     const handleHairHighlightColorChange = value => dispatch(setHairHighlightColor(value));
     const handleEyeColorChange = value => dispatch(setEyeColor(eyeColors.indexOf(value)));
     const handleBeardColorChange = value => dispatch(setBeardColor(value));
     const handleEyebrowColorChange = value => dispatch(setEyebrowColor(value));
     const handleBlushColorChange = blushColorName =>
-        dispatch(setBlushColor(+Object.keys(blushColors)
-            .find(key => blushColors[key] === blushColorName)));
+        dispatch(setBlushColor([...blushColors.entries()]
+            .find(([key]) => blushColors[key] === blushColorName)[1]));
     const handleLipstickColorChange = value => dispatch(setLipstickColor(value));
     const handleChestHairColorChange = value => dispatch(setChestHairColor(value));
 
@@ -141,8 +141,8 @@ const HairAndColors = ({ classes, history }) => {
                 <SelectionOption
                     classes={{ selection: classes.selection }}
                     label="Hair"
-                    options={ hairList[gender].map(({ name }) => name) }
-                    value={ hairList[gender][hair].name }
+                    options={ [...hairList[gender].values()].map(({ name }) => name) }
+                    value={ hairList[gender].get(hair).name }
                     onChange={ handleHairChange }
                 />
                 <ExpansionPanelOption

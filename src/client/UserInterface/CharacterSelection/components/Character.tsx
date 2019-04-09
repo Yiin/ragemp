@@ -12,6 +12,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import { callServer } from 'rage-rpc';
+import { SharedConstants } from 'Shared/constants';
 
 const Character = ({
     id,
@@ -20,6 +22,7 @@ const Character = ({
     lastPlayed,
 
     onClick,
+    onDelete,
 
     ...props
 }) => {
@@ -27,16 +30,19 @@ const Character = ({
 
     const handleClickDelete = () => setConfirmDelete(true);
     const closeDeletionConfirmation = () => setConfirmDelete(false);
-    const requestCharacterDeletion = () => {
+    const requestCharacterDeletion = async () => {
+        await callServer(SharedConstants.User.RPC.DELETE_CHARACTER, id);
         closeDeletionConfirmation();
-        console.log('Character was deleted! (not really)');
+        onDelete();
     };
+
+    const lastPlayedRelative = DateTime.fromISO(lastPlayed).toRelative() || 'Never';
 
     return (
         <ListItem
             button
             alignItems="flex-start"
-            onClick={ () => onClick(id) }
+            onMouseDown={ () => onClick(id) }
             { ...props }
         >
             <ListItemText
@@ -46,7 +52,7 @@ const Character = ({
                         <Typography component="span" color="textPrimary">
                             { jobTitle }
                         </Typography>
-                        Last played: { DateTime.fromJSDate(lastPlayed).toRelative() }
+                        Last played: { lastPlayedRelative }
                     </React.Fragment>
                 }
             />

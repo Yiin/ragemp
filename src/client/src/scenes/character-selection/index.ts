@@ -39,35 +39,30 @@ export default class CharacterSelectionScene {
      * This is the entry point (regarding scenes) after player logs in.
      */
     async afterPlayerLogin(auth: LoginResponse) {
-        log('0');
         mp.storage.data.auth = auth;
         mp.storage.flush();
         // Save auth token
-        log('1');
 
         const { length: charactersCount }: Character[] = await callServer(
             SharedConstants.User.RPC.GET_CHARACTERS
         );
-        log('2');
 
         if (charactersCount === 0) {
-            log('3');
             call(CharacterSelectionConstants.RPC.START_CHARACTER_CREATION_SCENE);
             // Forward player to character creation scene because he has no characters
         } else {
-            log('4');
             this.start();
             // Start character selection scene
         }
     }
 
-    @handleEvent(CharacterCreationConstants.Events.CHARACTER_CREATED)
     @handleRPC(CharacterSelectionConstants.RPC.START_CHARACTER_SELECTON_SCENE)
     /**
      * Camera & UI
      */
     start() {
         mp.gui.chat.activate(false);
+        mp.gui.cursor.show(true, true);
         this.camera.setActiveCamera(true);
 
         this.player = mp.players.local;
@@ -127,15 +122,25 @@ export default class CharacterSelectionScene {
                     SharedConstants.User.RPC.GET_CHARACTER,
                     characterId
                 );
-                PlayerManager.updateCharacterAppearance(
-                    JSON.parse(appearance) as CharacterAppearance
-                );
-            }
-        );
 
-        register(
-            CharacterSelectionConstants.RPC.DELETE_CHARACTER,
-            () => {/* TODO */}
+                let direction = -1;
+                hookEvent(GameConstants.Events.RENDER, unhook => () => {
+                    const alpha = this.player.getAlpha();
+                    if (direction > 0 && alpha === 255) {
+                        unhook();
+                        return;
+                    }
+                    if (direction < 0 && !alpha) {
+                        PlayerManager.updateCharacterAppearance(
+                            JSON.parse(appearance) as CharacterAppearance
+                        );
+                        direction = 1;
+                    }
+                    this.player.setAlpha(
+                        Math.min(255, Math.max(0, alpha + 51 * direction))
+                    );
+                })
+            }
         );
 
         UIManager.show('CharacterSelection');
@@ -178,10 +183,10 @@ export default class CharacterSelectionScene {
 
     @handleRPC(CharacterSelectionConstants.RPC.END_CHARACTER_SELECTON_SCENE)
     end() {
+        mp.gui.cursor.show(false, false);
         mp.gui.chat.activate(true);
         
         unregister(CharacterSelectionConstants.RPC.SELECT_CHARACTER);
-        unregister(CharacterSelectionConstants.RPC.DELETE_CHARACTER);
         unregister(CharacterSelectionConstants.RPC.CREATE_CHARACTER);
         
         this.unhookRender();

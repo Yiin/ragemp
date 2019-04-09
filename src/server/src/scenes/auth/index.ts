@@ -16,10 +16,9 @@ import {
     validate,
 } from '~/validation';
 
-import PlayersRepository from '~/repositories/player';
-import { GameConstants } from '~/constants/game';
 import { UserEntityRepository } from '~/repositories/player/bindings';
 import { ServerConstants } from '~/constants/server';
+import { GameConstants } from '~/constants/game';
 
 @bind()
 @injectable()
@@ -27,17 +26,19 @@ export default class AuthScene {
     constructor(
         @inject(UserEntityRepository)
         private readonly userEntityRepository: UserEntityRepository,
-
-        @inject(PlayersRepository)
-        private readonly playersRepository: PlayersRepository,
     ) {}
 
-    @RPC('playerInitiated')
+    @handleEvent(GameConstants.Events.PLAYER_READY)
+    onPlayerReady(playerMp: PlayerMp) {
+        console.log('calling serverReady');
+        playerMp.call('serverReady');
+    }
+
+    @handleEvent('playerInitiated')
     /**
      * Player is ready to play, ask him to authenticate himself.
      */
-    authenticatePlayer(_: never, { player: playerMp }: PLI) {
-        console.log('playerReady');
+    authenticatePlayer(playerMp: PlayerMp) {
         playerMp.call(AuthConstants.Events.PLAYER_READY_FOR_AUTHENTICATION);
     }
 
@@ -116,7 +117,7 @@ export default class AuthScene {
             throw ValidationError('password', 'Invalid password');
         }
 
-        mp.events.call(ServerConstants.AuthEvents.USER_LOGIN, playerMp, user);
+        mp.events.call(ServerConstants.Auth.Events.USER_LOGIN, playerMp, user);
 
         if (remember) {
         // Generate authentication token that will be used for login
@@ -141,7 +142,7 @@ export default class AuthScene {
         const user = await this.userEntityRepository.findOne({ authToken });
 
         if (user && token.verify(data, authToken)) {
-            this.playersRepository.onUserLogin(playerMp, user);
+            mp.events.call(ServerConstants.Auth.Events.USER_LOGIN, playerMp, user);
             return true;
         }
         return false;

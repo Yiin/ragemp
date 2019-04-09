@@ -3,6 +3,7 @@ import { SharedConstants } from 'Shared/constants';
 import { RPC } from '~/rpc';
 import { bind } from '~/container';
 import PlayersRepository from '~/repositories/player';
+import { CharacterEntityRepository } from '~/repositories/player/bindings';
 
 @bind()
 @injectable()
@@ -10,16 +11,17 @@ export default class UserRPCs {
     constructor(
         @inject(PlayersRepository)
         private readonly playersRepository: PlayersRepository,
+
+        @inject(CharacterEntityRepository)
+        private readonly characterEntityRepository: CharacterEntityRepository,
     ) {}
 
     @RPC(SharedConstants.User.RPC.GET_CHARACTERS)
     async getCharacters(_: never, { player: playerMp }: PLI) {
-        console.log('getUser');
         const user = await this.playersRepository.getUser(playerMp);
         
         if (user) {
-            console.log('user.characters', await user.characters);
-            return await user.characters;
+            return user.characters;
         }
         return [];
     }
@@ -32,6 +34,15 @@ export default class UserRPCs {
             const characters = await user.characters;
 
             return characters.find(({ id }) => id === characterId);
+        }
+    }
+
+    @RPC(SharedConstants.User.RPC.DELETE_CHARACTER)
+    async deleteCharacter(characterId: number, { player: playerMp }: PLI) {
+        const user = await this.playersRepository.getUser(playerMp);
+    
+        if (user) {
+            return this.characterEntityRepository.delete(characterId);
         }
     }
 }

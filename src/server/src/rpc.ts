@@ -8,7 +8,6 @@ export const RPC = eventName => (
     setTimeout(() => {
         const service = container.get(target.constructor);
         try {
-            console.log('registering', eventName);
             register(eventName, async (...args) => {
                 try {
                     return await service[propertyKey](...args);

@@ -16,10 +16,12 @@ import { CharacterCreationConstants } from '~/constants/character-creation';
 const NameInputDialog = ({ open, onClose, onSubmit }) => {
     const [name, setName] = useState('');
     const [error, setError] = useState();
+    const [submitting, setSubmitting] = useState(false);
     const { state } = useContext(Context);
 
     const handleNameChange = e => setName(e.target.value);
     const handleSubmit = async () => {
+        setSubmitting(true);
         try {
             console.log('calling', SharedConstants.CharacterCreation.RPC.CREATE_CHARACTER)
             await rpc.callServer(
@@ -33,6 +35,7 @@ const NameInputDialog = ({ open, onClose, onSubmit }) => {
             console.log(e);
             setError(e.name);
         }
+        setSubmitting(false);
     };
 
     return (
@@ -59,7 +62,11 @@ const NameInputDialog = ({ open, onClose, onSubmit }) => {
                 <Button onClick={ onClose } color="primary">
                     Cancel
                 </Button>
-                <Button onClick={ handleSubmit } color="primary">
+                <Button
+                    onClick={ handleSubmit }
+                    color="primary"
+                    disabled={ submitting }
+                >
                     Create character
                 </Button>
             </DialogActions>

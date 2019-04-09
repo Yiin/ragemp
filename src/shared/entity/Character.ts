@@ -45,6 +45,21 @@ export class Character {
     @Column('float', { default: 0 })
     heading: number;
 
-    @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-    lastPlayed: Date;
+    @Column('timestamp', {
+        default: null,
+        onUpdate: 'CURRENT_TIMESTAMP',
+        transformer: {
+            from(value) {
+                if (value) {
+                    value.setTime(value.getTime() - value.getTimezoneOffset() * 6e4);
+                    // Reset time from local to UTC
+                }
+                return value;
+            },
+            to(value) {
+                return value;
+            }
+        }
+    })
+    lastPlayed: string;
 }

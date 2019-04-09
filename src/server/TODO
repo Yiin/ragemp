@@ -4,6 +4,7 @@ General:
     ✔ Client side @done(19-04-04 22:50)
     ☐ Server side
     ☐ CEF
+  ☐ Setup server side debugging (for VS Code)
 Auth:
   Login:
     ✔ Remember me box @done(19-03-25 02:10)
@@ -20,22 +21,27 @@ Character Creation:
     ✔ Fantasy eye colors @done(19-03-28 00:04)
     ✔ Unnatural blush colors @done(19-03-28 00:26)
     ✔ Colorful chest hair colors @done(19-03-27 23:57)
-  ✔ Upon clicking [Create] button, player should be provided with dialog box with name input that once submitted, will create a new character and redirect player to Character Selection scene. @done(19-03-28 01:31)
+  ✔ Upon clicking [Create] button, player should be provided with dialog box with name input that once submitted, will create a new character and redirect player to Character Selection scene. @done(19-04-09 01:45)
     ✔ Input dialog @done(19-03-26 22:49)
     ✔ SS Name validation @done(19-03-28 01:31)
     ✔ Save character data to database @done(19-03-28 01:31)
     ✔ Show Character Selection scene @done(19-03-28 01:31)
     ✔ Randomize all features button doesn't work. @done(19-03-28 23:48)
+    ✔ Show mouse cursor in character selection scene @done(19-04-08 20:51)
+    ✔ Game freezes after clicking [create] button. @done(19-04-08 23:25)
+    ✔ Character is not assigned to the user. @done(19-04-08 23:03)
 Character Selection:
-  ☐ When possible, fetch data directly from the server, do not pass it through arguments forward and back.
+  ✔ When possible, fetch data directly from the server, do not pass it through arguments forward and back. @done(19-04-08 23:36)
     ✔ Characters list in Character Selection Scene. @done(19-03-30 01:38)
     ✔ Characters list in Character Selection UI. @done(19-03-30 01:38)
-    ☐ Currently selected character info in Character Selection Scene.
+    ✔ Currently selected character info in Character Selection Scene. @done(19-04-08 23:36)
   ✔ List available characters @done(19-04-01 03:29)
   ✔ Preview selected character @done(19-04-01 03:29)
-  ☐ Update characters list after creating one
+  ✔ Update characters list after creating one @done(19-04-08 23:35)
     Server currently returns cached data (before character was created).
-  ☐ Ability to delete selected character
+  ✔ Ability to delete selected character @done(19-04-09 00:33)
+  ✔ Fix issue with saved timestamps. @done(19-04-09 01:44)
+  ☐ Create `Play` button.
   ☐ Start the game with selected character
 Refactoring:
   ✔ Separate files by their function instead of domain. @done(19-04-01 21:37)

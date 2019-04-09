@@ -1,5 +1,6 @@
 import container from '~/container';
 import { captureException } from '~/sentry';
+import { log } from '~/debug';
 
 export const handleEvent = (eventName: string) => (
     target,
@@ -11,6 +12,7 @@ export const handleEvent = (eventName: string) => (
 
             mp.events.add(eventName, async (...args) => {   
                 try {
+                    log(`Event called: ${eventName}`);
                     await service[propertyKey](...args);
                 } catch (e) {
                     captureException(e);

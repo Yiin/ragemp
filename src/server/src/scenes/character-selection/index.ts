@@ -36,6 +36,8 @@ export default class CharacterSelectionModule {
         const { name, ...appearance } = data;
         const user = this.playersRepository.getUser(playerMp);
 
+        console.log(await user);
+
         await this.characterEntityRepository.save(
             Character.create({
                 user,

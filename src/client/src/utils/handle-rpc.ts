@@ -1,6 +1,7 @@
 import { register } from 'rage-rpc';
 import container from '~/container';
 import { captureException } from '~/sentry';
+import { log } from '~/debug';
 
 export const handleRPC = eventName => (
     target,
@@ -11,6 +12,7 @@ export const handleRPC = eventName => (
         try {
             register(eventName, async (...args) => {
                 try {
+                    log(`RPC called: ${eventName}`);
                     return await service[propertyKey](...args);
                 } catch (e) {
                     captureException(e);
