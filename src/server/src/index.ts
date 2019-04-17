@@ -39,8 +39,9 @@ const init = async () => {
     await import('./repositories/player');
     // Repositories
 
-    await import('./rpcs/user');
-    // Rpcs
+    await import('./procedures/user');
+    await import('./procedures/storylines');
+    // Procedures
 
     await import('./scenes/auth');
     await import('./scenes/character-selection');

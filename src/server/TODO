@@ -87,4 +87,29 @@ Game start:
   ☐ Character spawn locations
     ☐ Train station
     ☐ Bridge to the sea
-    ☐ Petrol station (with a bus)
+    ✔ Petrol station (with a bus) @done(19-04-13 01:03)
+Storylines & Quests:
+  - Currently structure is as follows:
+  -  Character has many storylines
+  -    Each storyline has many quests
+  -      Each quest has many steps
+  -        Each step has many counters
+  ✘ Consider simplifying ^ @cancelled(19-04-16 01:42)
+    Recursive relation maybe? i.e. Quest can have many quests
+  ☐ Define rewards
+  ☐ Quest completion logic
+    Automatically trigger quest completion once predefined conditions are met
+  ☐ Quest management API
+    Current:
+      ✔ Start storyline for character @done(19-04-17 01:37)
+        ✔ Start first quest in storyline for character @done(19-04-17 01:37)
+          ✔ Add initial available steps for character @done(19-04-17 01:37)
+      ☐ Increase quest step counter
+      ☐ Complete quest step
+      ☐ Complete quest
+      ☐ Complete storyline
+      ☐ Give rewards
+    ✘ Recursive: @cancelled(19-04-16 01:42)
+      ✘ Assign quest to character @cancelled(19-04-16 01:42)
+      ✘ Complete quest for character @cancelled(19-04-16 01:42)
+      ✘ Give rewards @cancelled(19-04-16 01:42)

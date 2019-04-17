@@ -1,138 +1,130 @@
-const controlsIds = {
-    F5: 327,
-    W: 32, // 232
-    S: 33, // 31, 219, 233, 268, 269
-    A: 34, // 234
-    D: 35, // 30, 218, 235, 266, 267
-    Space: 321,
-    LCtrl: 326,
-    LShift: 21,
+getNormalizedVector = function(vector) {
+    mag = Math.sqrt(
+        vector.x * vector.x + vector.y * vector.y + vector.z * vector.z
+    );
+    vector.x = vector.x / mag;
+    vector.y = vector.y / mag;
+    vector.z = vector.z / mag;
+    return vector;
 };
-
-global.fly = {
-    flying: false, f: 2.0, w: 2.0, h: 2.0, point_distance: 1000,
+getCrossProduct = function(v1, v2) {
+    vector = new mp.Vector3(0, 0, 0);
+    vector.x = v1.y * v2.z - v1.z * v2.y;
+    vector.y = v1.z * v2.x - v1.x * v2.z;
+    vector.z = v1.x * v2.y - v1.y * v2.x;
+    return vector;
 };
-global.gameplayCam = mp.cameras.new('gameplay');
+bindVirtualKeys = {
+    F2: 0x71
+};
+bindASCIIKeys = {
+    Q: 69,
+    E: 81,
+    LCtrl: 17,
+    Shift: 16
+};
+isNoClip = false;
+noClipCamera;
+shiftModifier = false;
+controlModifier = false;
+localPlayer = mp.players.local;
 
-mp.game.graphics.notify('~r~Fly script loaded!');
-mp.game.graphics.notify('~r~F5~w~ - enable/disable\n~r~F5+Space~w~ - disable without warping to ground\n~r~W/A/S/D/Space/LCtrl~w~ - move');
-mp.game.graphics.notify('~r~/savecam~w~ - save Camera position.');
-
-let direction = null;
-let coords = null;
-
-function pointingAt(distance) {
-    const farAway = new mp.Vector3((direction.x * distance) + (coords.x), (direction.y * distance) + (coords.y), (direction.z * distance) + (coords.z));
-
-    const result = mp.raycasting.testPointToPoint(coords, farAway, [1, 16]);
-    if (result === undefined) {
-        return 'undefined';
-    }
-    return result;
-}
-
-mp.events.add('render', () => {
-    const controls = mp.game.controls;
-    const fly = global.fly;
-    direction = global.gameplayCam.getDirection();
-    coords = global.gameplayCam.getCoord();
-
-    mp.game.graphics.drawText(`Coords: ${JSON.stringify(coords)}`, [0.5, 0.005], {
-        font: 0,
-        color: [255, 255, 255, 185],
-        scale: [0.3, 0.3],
-        outline: true,
-    });
-    mp.game.graphics.drawText(`pointAtCoord: ${JSON.stringify(pointingAt(fly.point_distance).position)}`, [0.5, 0.025], {
-        font: 0,
-        color: [255, 255, 255, 185],
-        scale: [0.3, 0.3],
-        outline: true,
-    });
-
-    if (controls.isControlJustPressed(0, controlsIds.F5)) {
-        fly.flying = !fly.flying;
-
-        const player = mp.players.local;
-
-        player.setInvincible(fly.flying);
-        player.freezePosition(fly.flying);
-        player.setAlpha(fly.flying ? 0 : 255);
-
-        if (!fly.flying && !controls.isControlPressed(0, controlsIds.Space)) {
-            const position = mp.players.local.position;
-            position.z = mp.game.gameplay.getGroundZFor3dCoord(position.x, position.y, position.z, 0.0, false);
-            mp.players.local.setCoordsNoOffset(position.x, position.y, position.z, false, false, false);
-        }
-
-        mp.game.graphics.notify(fly.flying ? 'Fly: ~g~Enabled' : 'Fly: ~r~Disabled');
-    } else if (fly.flying) {
-        let updated = false;
-        const position = mp.players.local.position;
-        const maxSpeed = controls.isControlPressed(0, controlsIds.LShift)
-            ? 0.2
-            : 8.0;
-
-        if (controls.isControlPressed(0, controlsIds.W)) {
-            if (fly.f < maxSpeed) { fly.f *= 1.025; }
-            if (fly.f > maxSpeed) { fly.f *= 0.975; }
-
-            position.x += direction.x * fly.f;
-            position.y += direction.y * fly.f;
-            position.z += direction.z * fly.f;
-            updated = true;
-        } else if (controls.isControlPressed(0, controlsIds.S)) {
-            if (fly.f < maxSpeed) { fly.f *= 1.025; }
-            if (fly.f > maxSpeed) { fly.f *= 0.975; }
-
-            position.x -= direction.x * fly.f;
-            position.y -= direction.y * fly.f;
-            position.z -= direction.z * fly.f;
-            updated = true;
-        } else {
-            fly.f = maxSpeed / 4;
-        }
-
-        if (controls.isControlPressed(0, controlsIds.A)) {
-            if (fly.l < maxSpeed) { fly.l *= 1.025; }
-            if (fly.l > maxSpeed) { fly.l *= 0.975; }
-
-            position.x += (-direction.y) * fly.l;
-            position.y += direction.x * fly.l;
-            updated = true;
-        } else if (controls.isControlPressed(0, controlsIds.D)) {
-            if (fly.l < maxSpeed) { fly.l *= 1.025; }
-            if (fly.l > maxSpeed) { fly.l *= 0.975; }
-
-            position.x -= (-direction.y) * fly.l;
-            position.y -= direction.x * fly.l;
-            updated = true;
-        } else {
-            fly.l = maxSpeed / 4;
-        }
-
-        if (controls.isControlPressed(0, controlsIds.Space)) {
-            if (fly.h < maxSpeed) { fly.h *= 1.025; }
-            if (fly.h > maxSpeed) { fly.h *= 0.975; }
-
-            position.z += fly.h;
-            updated = true;
-        } else if (controls.isControlPressed(0, controlsIds.LCtrl)) {
-            if (fly.h < maxSpeed) { fly.h *= 1.025; }
-            if (fly.h > maxSpeed) { fly.h *= 0.975; }
-
-            position.z -= fly.h;
-            updated = true;
-        } else {
-            fly.h = maxSpeed / 4;
-        }
-
-        if (updated) {
-            mp.players.local.setCoordsNoOffset(position.x, position.y, position.z, false, false, false);
-        }
+mp.keys.bind(bindVirtualKeys.F2, true, function() {
+    isNoClip = !isNoClip;
+    mp.game.ui.displayRadar(!isNoClip);
+    if (isNoClip) {
+        startNoClip();
+    } else {
+        stopNoClip();
     }
 });
 
-mp.events.add('getCamCoords', (name) => {
-    mp.events.callRemote('saveCamCoords', JSON.stringify(coords), JSON.stringify(pointingAt(fly.point_distance)), name);
+function startNoClip() {
+    mp.game.graphics.notify('NoClip ~g~activated');
+    camPos = new mp.Vector3(
+        localPlayer.position.x,
+        localPlayer.position.y,
+        localPlayer.position.z
+    );
+    camRot = mp.game.cam.getGameplayCamRot(2);
+    noClipCamera = mp.cameras.new('default', camPos, camRot, 45);
+    noClipCamera.setActive(true);
+    mp.game.cam.renderScriptCams(true, false, 0, true, false);
+    localPlayer.freezePosition(true);
+    localPlayer.setInvincible(true);
+    localPlayer.setVisible(false, false);
+    localPlayer.setCollision(false, false);
+}
+
+function stopNoClip() {
+    mp.game.graphics.notify('NoClip ~r~disabled');
+    if (noClipCamera) {
+        localPlayer.position = noClipCamera.getCoord();
+        localPlayer.setHeading(noClipCamera.getRot(2).z);
+        noClipCamera.destroy(true);
+        noClipCamera = null;
+    }
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+    localPlayer.freezePosition(false);
+    localPlayer.setInvincible(false);
+    localPlayer.setVisible(true, false);
+    localPlayer.setCollision(true, false);
+}
+mp.events.add('render', function() {
+    if (!noClipCamera || mp.gui.cursor.visible) {
+        return;
+    }
+    controlModifier = mp.keys.isDown(bindASCIIKeys.LCtrl);
+    shiftModifier = mp.keys.isDown(bindASCIIKeys.Shift);
+    rot = noClipCamera.getRot(2);
+    fastMult = 1;
+    slowMult = 1;
+    if (shiftModifier) {
+        fastMult = 3;
+    } else if (controlModifier) {
+        slowMult = 0.5;
+    }
+    rightAxisX = mp.game.controls.getDisabledControlNormal(0, 220);
+    rightAxisY = mp.game.controls.getDisabledControlNormal(0, 221);
+    leftAxisX = mp.game.controls.getDisabledControlNormal(0, 218);
+    leftAxisY = mp.game.controls.getDisabledControlNormal(0, 219);
+    pos = noClipCamera.getCoord();
+    rr = noClipCamera.getDirection();
+    vector = new mp.Vector3(0, 0, 0);
+    vector.x = rr.x * leftAxisY * fastMult * slowMult;
+    vector.y = rr.y * leftAxisY * fastMult * slowMult;
+    vector.z = rr.z * leftAxisY * fastMult * slowMult;
+    upVector = new mp.Vector3(0, 0, 1);
+    rightVector = getCrossProduct(
+        getNormalizedVector(rr),
+        getNormalizedVector(upVector)
+    );
+    rightVector.x *= leftAxisX * 0.5;
+    rightVector.y *= leftAxisX * 0.5;
+    rightVector.z *= leftAxisX * 0.5;
+    upMovement = 0.0;
+    if (mp.keys.isDown(bindASCIIKeys.Q)) {
+        upMovement = 0.5;
+    }
+    downMovement = 0.0;
+    if (mp.keys.isDown(bindASCIIKeys.E)) {
+        downMovement = 0.5;
+    }
+    mp.players.local.position = new mp.Vector3(
+        pos.x + vector.x + 1,
+        pos.y + vector.y + 1,
+        pos.z + vector.z + 1
+    );
+    mp.players.local.heading = rr.z;
+    noClipCamera.setCoord(
+        pos.x - vector.x + rightVector.x,
+        pos.y - vector.y + rightVector.y,
+        pos.z - vector.z + rightVector.z + upMovement - downMovement
+    );
+    noClipCamera.setRot(
+        rot.x + rightAxisY * -5.0,
+        0.0,
+        rot.z + rightAxisX * -5.0,
+        2
+    );
 });

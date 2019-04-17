@@ -1,15 +1,12 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany, DeepPartial} from 'typeorm';
 
 import { Character } from './Character';
+import { BaseEntity } from './BaseEntity';
 
 @Entity('Users')
-export class User {
+export class User extends BaseEntity {
     static create(entity: DeepPartial<User>) {
-        const user = new User();
-        for (const key in entity) {
-            user[key] = entity[key];
-        }
-        return user;
+        return super.create(entity) as User;
     }
 
     @PrimaryGeneratedColumn()

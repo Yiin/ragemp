@@ -4,18 +4,17 @@ import {
     Column,
     ManyToOne,
     DeepPartial,
+    OneToMany,
 } from 'typeorm';
 
 import { User } from './User';
+import { BaseEntity } from './BaseEntity';
+import { CharacterStoryline } from './CharacterStoryline';
 
 @Entity('Characters')
-export class Character {
-    static create(entity: DeepPartial<Character>): Character {
-        const character = new Character();
-        for (const key in entity) {
-            character[key] = entity[key];
-        }
-        return character;
+export class Character extends BaseEntity {
+    static create(entity: DeepPartial<Character>) {
+        return super.create(entity) as Character;
     }
 
     @PrimaryGeneratedColumn()
@@ -23,6 +22,9 @@ export class Character {
 
     @ManyToOne(type => User, user => user.characters)
     user: Promise<User>;
+
+    @OneToMany(type => CharacterStoryline, storyline => storyline.character)
+    storylines: CharacterStoryline[];
 
     @Column()
     name: string;

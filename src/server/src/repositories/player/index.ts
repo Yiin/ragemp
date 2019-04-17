@@ -1,11 +1,13 @@
 import './bindings';
 import { inject, injectable } from 'inversify';
-import { User } from 'Shared/entity';
+import { User, Character } from 'Shared/entity';
 import { bind, handleEvent } from '~/container';
 import { UserEntityRepository, CharacterEntityRepository } from './bindings';
 import { GameConstants } from '~/constants/game';
 import { ServerConstants } from '~/constants/server';
 import { SharedConstants } from 'Shared/constants';
+import { PlayerVariables } from 'Shared/constants/player-variables';
+import { FindOneOptions } from 'typeorm';
 
 @bind()
 @injectable()
@@ -31,12 +33,24 @@ export default class PlayersRepository {
         }
     });
 
-    fetchUser(userId: string | number) {
-        return this.userEntityRepository.findOne(userId);
+    fetchUser(userId: string | number, options?: FindOneOptions<User>) {
+        return this.userEntityRepository.findOne(userId, options);
     }
 
     getUser(playerMp: PlayerMp): Promise<User | undefined> {
         return this.players[playerMp.id];
+    }
+
+    async getCharacter(playerMp: PlayerMp): Promise<Character | undefined> {
+        const user = await this.getUser(playerMp);
+
+        if (user) {
+            const characters = await user.characters;
+
+            return characters.find(character => (
+                character.id === playerMp.getVariable(PlayerVariables.CHARACTER_ID)
+            ));
+        }
     }
 
     @handleEvent(ServerConstants.Auth.Events.USER_LOGIN)

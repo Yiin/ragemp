@@ -15,7 +15,7 @@ module.exports = {
         alias: {
             Shared: path.resolve('shared'),
         },
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js', '.md'],
     },
     optimization: {
         minimize: false,
@@ -23,6 +23,13 @@ module.exports = {
     target: 'node', // in order to ignore built-in modules like path, fs, etc.
     module: {
         rules: [
+            {
+                test: /\.md$/,
+                use: [
+                    { loader: 'raw-loader' },
+                    { loader: 'markdown-loader' },
+                ],
+            },
             {
                 test: /\.ts$/,
                 loader: 'ts-loader',

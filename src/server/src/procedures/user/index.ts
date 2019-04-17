@@ -7,7 +7,7 @@ import { CharacterEntityRepository } from '~/repositories/player/bindings';
 
 @bind()
 @injectable()
-export default class UserRPCs {
+export default class UserProcedures {
     constructor(
         @inject(PlayersRepository)
         private readonly playersRepository: PlayersRepository,

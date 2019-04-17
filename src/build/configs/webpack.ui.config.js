@@ -78,10 +78,17 @@ module.exports = ({ browser } = {}) => browsers.map(uiName => {
                     ],
                 },
                 {
+                    test: /\.md$/,
+                    use: [
+                        'raw-loader',
+                        'markdown-loader',
+                    ],
+                },
+                {
                     test: /\.css?$/,
                     use: [
                         {
-                        loader: MiniCssExtractPlugin.loader,
+                            loader: MiniCssExtractPlugin.loader,
                         },
                         {
                             loader: 'css-loader',
