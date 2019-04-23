@@ -1,5 +1,7 @@
 import {Entity, Column, OneToMany, DeepPartial, ManyToOne, Unique, PrimaryGeneratedColumn } from 'typeorm';
 
+import { SharedConstants } from 'Shared/constants';
+
 import { BaseEntity } from './BaseEntity';
 import { Character } from './Character';
 import { CharacterQuest } from './CharacterQuest';
@@ -20,8 +22,8 @@ export class CharacterStoryline extends BaseEntity {
     @OneToMany(type => CharacterQuest, quest => quest.storyline)
     quests: CharacterQuest[];
 
-    @Column()
-    key: string;
+    @Column({ type: 'varchar' })
+    key: SharedConstants.Storylines;
 
     @Column({ default: false })
     done: boolean;

@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { App } from './App';
+import background from '../in-game-background.jpg';
+import Storylines from './Storylines';
 
-ReactDOM.render(<App />, document.getElementById('main'));
+// document.body.style.background = `url(${background})`;
+// document.body.style.backgroundSize = 'cover';
+
+ReactDOM.render(<Storylines />, document.getElementById('main'));

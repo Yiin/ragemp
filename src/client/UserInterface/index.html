@@ -31,9 +31,9 @@
         }
     </style>
     <script>
-        mp = mp || {
+        mp = typeof mp === 'undefined' ? {
             trigger() {},
-        };
+        } : mp;
 
         function focusChanged() {
             const isInputFocused = ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName);

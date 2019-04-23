@@ -54,13 +54,15 @@ export default class CharacterSelectionModule {
         const user = await this.playersRepository.getUser(playerMp);
 
         if (!user) {
+            console.log(`User wasn't found`);
             return;
         }
-
+        
         const character = (await user.characters)
             .find(character => character.id === characterId);
-
+        
         if (!character) {
+            console.log(`Character wasn't found`);
             return;
         }
 

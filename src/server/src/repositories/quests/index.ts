@@ -17,18 +17,29 @@ export default class QuestsRepository {
         private readonly questRepository: CharacterQuestRepository,
 
         @inject(CharacterQuestStepRepository)
-        private readonly questStepRepository: CharacterQuestStepRepository,
+        private readonly questTaskRepository: CharacterQuestStepRepository,
 
         @inject(CharacterQuestStepCounterRepository)
-        private readonly questStepCounterRepository: CharacterQuestStepCounterRepository,
+        private readonly questTaskCounterRepository: CharacterQuestStepCounterRepository,
     ) {}
 
     async startStoryline(character: Character, key: SharedConstants.Storylines) {
         const storyline = getStorylineByKey(key);
 
         if (!storyline) {
-            return;
+            console.log(`Storyline ${key} doesn't exist`);
+            return false;
             // Storyline doesn't exist
+        }
+
+        const existingStoryline = await this.storylineRepository.findOne({
+            character,
+            key,
+        });
+
+        if (existingStoryline) {
+            return false;
+            // Storyline already started
         }
 
         // Start the storyline
@@ -46,9 +57,21 @@ export default class QuestsRepository {
             storylineEntity,
             quests[0],
         );
+
+        return true;
     }
 
     async startQuest(storyline: CharacterStoryline, quest: Quest) {
+        const existingQuest = await this.questRepository.findOne({
+            storyline,
+            key: quest.key,
+        });
+
+        if (existingQuest) {
+            return false;
+            // Quest already started
+        }
+
         const questEntity = await this.questRepository.save(
             CharacterQuest.create({
                 key: quest.key,
@@ -65,7 +88,17 @@ export default class QuestsRepository {
     }
     
     async startTask(quest: CharacterQuest, task: Task) {
-        const taskEntity = await this.questStepRepository.save(
+        const existingTask = await this.questTaskRepository.findOne({
+            quest,
+            key: task.key,
+        });
+
+        if (existingTask) {
+            return false;
+            // Quest already started
+        }
+
+        const taskEntity = await this.questTaskRepository.save(
             CharacterQuestTask.create({
                 key: task.key,
                 quest,
@@ -81,10 +114,21 @@ export default class QuestsRepository {
     }
 
     async startCounter(task: CharacterQuestTask, counter: TaskCounter) {
-        const counterEntity = await this.questStepCounterRepository.save(
-            CharacterQuestStepCounter.create({
-                key: counter.key,
+        const existingTask = await this.questTaskCounterRepository.findOne({
+            task,
+            key: counter.key,
+        });
 
+        if (existingTask) {
+            return false;
+            // Quest already started
+        }
+
+        const counterEntity = await this.questTaskCounterRepository.save(
+            CharacterQuestStepCounter.create({
+                task,
+                key: counter.key,
+                value: 0,
             })
         );
 

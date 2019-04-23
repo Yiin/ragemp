@@ -15,19 +15,16 @@ const serverReady = new Promise(resolve => {
 })
 
 const init = async () => {
-    mp.gui.chat.push('init');
     await import('./debug');
     await import('./scenes/auth');
     await import('./scenes/character-creation');
     await import('./scenes/character-selection');
     await import('./dialogs/storylines');
     
-    mp.gui.chat.push('awaiting container promises');
     log('awaiting container promises');
     await Promise.all(containerPromises);
     
     await serverReady;
-    mp.gui.chat.push('initiating player...');
     log('initiating player...');
     mp.events.callRemote('playerInitiated');
 };

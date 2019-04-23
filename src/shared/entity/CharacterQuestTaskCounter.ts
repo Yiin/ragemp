@@ -4,7 +4,7 @@ import { BaseEntity } from './BaseEntity';
 import { CharacterQuestTask } from './CharacterQuestTask';
 
 @Entity('CharacterQuestTaskCounters')
-@Unique(['questStep', 'key'])
+@Unique(['task', 'key'])
 export class CharacterQuestTaskCounter extends BaseEntity {
     static create(entity: DeepPartial<CharacterQuestTaskCounter>) {
         return super.create(entity) as CharacterQuestTaskCounter;
@@ -14,7 +14,7 @@ export class CharacterQuestTaskCounter extends BaseEntity {
     id: number;
 
     @ManyToOne(type => CharacterQuestTask, quest => quest.counters)
-    questStep: CharacterQuestTask;
+    task: CharacterQuestTask;
 
     @Column()
     key: string;

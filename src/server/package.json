@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master"
+    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master",
+    "jest": "^24.7.1"
   }
 }

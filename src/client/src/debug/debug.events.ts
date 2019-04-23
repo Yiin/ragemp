@@ -1,7 +1,15 @@
 import UIManager from '~/managers/ui';
 import { GameConstants } from '~/constants/game';
 import { callServer } from 'rage-rpc';
-import { CharacterStoryline } from 'Shared/entity/CharacterStoryline';
+import { SharedConstants } from 'Shared/constants';
+
+mp.keys.bind(GameConstants.VK.U, false, async () => {
+    if (await callServer('startStoryline', SharedConstants.Storylines.TUTORIAL)) {
+        mp.gui.chat.push('Tutorial started!');
+    } else {
+        mp.gui.chat.push('Tutorial is already in progress.');
+    }
+});
 
 mp.events.add('ui', name => {
     UIManager.show(name);

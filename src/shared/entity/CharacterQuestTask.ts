@@ -17,7 +17,7 @@ export class CharacterQuestTask extends BaseEntity {
     @ManyToOne(type => CharacterQuest, quest => quest.availableSteps)
     quest: CharacterQuest;
     
-    @OneToMany(type => CharacterQuestTaskCounter, counter => counter.questStep)
+    @OneToMany(type => CharacterQuestTaskCounter, counter => counter.task)
     counters: CharacterQuestTaskCounter[];
 
     @Column()

@@ -4,6 +4,7 @@ import { RPC } from '~/rpc';
 import PlayersRepository from '~/repositories/player';
 import { CharacterEntityRepository } from '~/repositories/player/bindings';
 import { SharedConstants } from 'Shared/constants';
+import QuestsRepository from '~/repositories/quests';
 
 @bind()
 @injectable()
@@ -14,6 +15,9 @@ export default class Storylines {
 
         @inject(CharacterEntityRepository)
         private readonly characterEntityRepository: CharacterEntityRepository,
+
+        @inject(QuestsRepository)
+        private readonly questsRepository: QuestsRepository,
     ) {}
 
     @RPC('getStorylines')
@@ -36,15 +40,14 @@ export default class Storylines {
     }
 
     @RPC('startStoryline')
-    async startStoryline(key: string, { player: playerMp }: PLI) {
-        const character = await this.playersRepository.getCharacter(
-            playerMp.getVariable(SharedConstants.PlayerVariables.CHARACTER_ID),
-        );
+    async startStoryline(key: SharedConstants.Storylines, { player: playerMp }: PLI) {
+        const character = await this.playersRepository.getCharacter(playerMp);
 
         if (!character) {
+            console.log(`character ${playerMp.getVariable(SharedConstants.PlayerVariables.CHARACTER_ID)} wasn't found.`);
             return;
         }
 
-        
+        return this.questsRepository.startStoryline(character, key);
     }
 }

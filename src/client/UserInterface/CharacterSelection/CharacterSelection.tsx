@@ -118,4 +118,4 @@ class CharacterSelection extends PureComponent<Props> {
     }
 };
 
-export default hot(withStyles(styles)(CharacterSelection));
+export default withStyles(styles)(CharacterSelection);
