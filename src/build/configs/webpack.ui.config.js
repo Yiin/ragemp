@@ -15,7 +15,11 @@ const browsers = dirs(path.resolve('client/UserInterface')).reduce((entries, dir
     return [...entries, folderName];
 }, []);
 
-module.exports = ({ browser } = {}) => browsers.map(uiName => {
+module.exports = (
+    { domain = 'http://localhost:3000' } = {},
+    { mode },
+) => browsers.map(uiName => {
+    const isDevelopmentEnv = mode === 'development';
     const outputPath = path.resolve(`../client_packages/UserInterface/${uiName}`);
 
     return {
@@ -27,14 +31,14 @@ module.exports = ({ browser } = {}) => browsers.map(uiName => {
             extensions: ['.js', '.ts', '.tsx'],
         },
         entry: [
-            browser && '@babel/polyfill',
-            browser && './client/UserInterface/browser-mocks.js',
+            isDevelopmentEnv && '@babel/polyfill',
+            isDevelopmentEnv && './client/UserInterface/browser-mocks.js',
             `./client/UserInterface/${uiName}/index.js`,
-            browser && `webpack-hot-middleware/client?path=/${uiName}__webpack_hmr&timeout=20000`,
+            isDevelopmentEnv && `webpack-hot-middleware/client?path=${domain}/${uiName}__webpack_hmr&timeout=20000`,
         ].filter(Boolean),
         output: {
             path: outputPath,
-            publicPath: `/${uiName}/`,
+            publicPath: `${domain}/${uiName}/`,
             filename: 'bundle.js',
             hotUpdateChunkFilename: '../.hot/[id].[hash].hot-update.js',
             hotUpdateMainFilename: '../.hot/[hash].hot-update.json',
@@ -67,8 +71,8 @@ module.exports = ({ browser } = {}) => browsers.map(uiName => {
                 from: path.resolve('client/UserInterface/index.html'),
                 to: path.resolve(`../client_packages/UserInterface/${uiName}/index.html`),
             }]),
-            new webpack.HotModuleReplacementPlugin(),
-        ],
+            isDevelopmentEnv && new webpack.HotModuleReplacementPlugin(),
+        ].filter(Boolean),
         module: {
             rules: [
                 {

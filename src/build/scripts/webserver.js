@@ -1,13 +1,18 @@
 const fs = require('fs');
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
 const webpack = require('webpack');
 const chalk = require('chalk');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-const webpackConfigs = require('../configs/webpack.ui.config')({ browser: true });
+const webpackConfigs = require('../configs/webpack.ui.config')(
+    process.env,
+    { mode: 'development' },
+);
 
 const app = express();
+app.use(cors());
 
 process.stdout.write = (write => (...args) =>
     !args[0].match(/wdm/)
@@ -41,7 +46,7 @@ webpackConfigs.forEach(config => {
     const devMiddleware = webpackDevMiddleware(compiler, {
         noInfo: true,
         progress: true,
-        publicPath,
+        publicPath: `/${uiName}/`,
         writeToDisk: true,
         stats: 'errors-only',
     });
@@ -61,7 +66,7 @@ webpackConfigs.forEach(config => {
         .use(devMiddleware)
         .use(webpackHotMiddleware(compiler, {
             noInfo: true,
-            path: `${publicPath.replace(/\/$/, '')}__webpack_hmr`,
+            path: `/${uiName}__webpack_hmr`,
             heartbeat: 20 * 1000,
         }));
 });

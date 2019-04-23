@@ -15,9 +15,6 @@ let killResolver;
 // helper methods
 const log = (...args) => console.log(chalk`[{yellow Overseer}]`, ...args);
 const error = (...args) => console.error(chalk`[{red Overseer}]`, ...args);
-const startBuild = () => spawn('npm.cmd', ['run', 'build'], {
-    stdio: 'inherit'
-});
 const killServer = () => {
     server.kill('SIGKILL');
     // exec('taskkill /pid ' + server.pid + ' /T /F');
@@ -57,7 +54,7 @@ const buildProcesses = {
     client: null,
     ui: null,
     server: null,
-    source: null
+    source: null,
 };
 
 const sourceHandler = type => async () => {
@@ -127,12 +124,22 @@ const uiSourceWatcher = chokidar.watch('./client/UserInterface');
 const serverSourceWatcher = chokidar.watch('./server/src');
 const sharedSourceWatcher = chokidar.watch('./shared');
 
+// Start webserver for UI hot-reloading
+spawn(
+    'npm.cmd', ['run', 'web'],
+    { stdio: 'inherit' },
+);
+
 for (const [watcher, handler] of [
+    [null, sourceHandler('ui')],
     [clientSourceWatcher, sourceHandler('client')],
-    [uiSourceWatcher, sourceHandler('ui')],
     [serverSourceWatcher, sourceHandler('server')],
     [sharedSourceWatcher, sourceHandler('source')],
 ]) {
+    if (!watcher) {
+        handler();
+        continue;
+    }
     watcher.on('ready', () => {
         if (watcher !== sharedSourceWatcher) {
             handler();
