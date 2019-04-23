@@ -5,7 +5,9 @@ General:
     ☐ Server side
     ☐ CEF
   ☐ Setup server side debugging (for VS Code)
-  ☐ Command to go back to character selection.
+  ✔ In-game hot reloading @done(19-04-23 23:34)
+  ☐ Command to go back to character selection. @high 
+  ☐ Investigate why rage-rpc tests are failing & why it is not working when react-hot-loader is present. @critical 
 Auth:
   Login:
     ✔ Remember me box @done(19-03-25 02:10)
