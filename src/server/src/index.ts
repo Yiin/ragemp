@@ -2,6 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import token from 'token';
 import { config } from 'dotenv';
+import 'rage-rpc';
 
 config({ path: path.resolve('src/.env') });
 // Initialize .env config values

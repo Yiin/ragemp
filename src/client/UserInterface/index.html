@@ -31,10 +31,14 @@
         }
     </style>
     <script>
-        mp = typeof mp === 'undefined' ? {
-            trigger() {},
-        } : mp;
+        if (typeof mp === 'undefined') {
+            console.log('We are not in-game.');
+            mp = { trigger() {} };
+        }
 
+        /**
+         * We're letting client know when input is focused, so it can ignore our keybinds.
+         */
         function focusChanged() {
             const isInputFocused = ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName);
 

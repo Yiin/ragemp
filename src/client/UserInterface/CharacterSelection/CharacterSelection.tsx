@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import * as rpc from 'rage-rpc';
-import { DateTime } from 'luxon';
+import { hot } from 'react-hot-loader/root';
 import { Classes } from 'jss';
+import * as rpc from 'rage-rpc';
 import withStyles, { StyleRulesCallback } from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
-import { hot } from 'react-hot-loader/root';
+import { MuiThemeProvider } from '@material-ui/core';
 
 import { Character } from 'Shared/entity';
 
@@ -14,6 +14,7 @@ import CharacterCard from './components/Character';
 import CharacterCreation from './components/CharacterCreation';
 import { SharedConstants } from 'Shared/constants';
 import { CharacterSelectionConstants } from '~/constants/character-selection';
+import { theme } from '../_theme';
 
 const styles: StyleRulesCallback = theme => ({
     root: {
@@ -48,6 +49,7 @@ class CharacterSelection extends PureComponent<Props> {
     }
 
     async loadCharacters() {
+        console.log('loadingCharacters');
         const characters = await rpc.callServer(SharedConstants.User.RPC.GET_CHARACTERS);
 
         console.log('characters', characters);
@@ -85,8 +87,8 @@ class CharacterSelection extends PureComponent<Props> {
         this.loadCharacters();
     };
     
-    handleCharacterCreation = () => {
-        rpc.callClient(CharacterSelectionConstants.RPC.CREATE_CHARACTER);
+    handleCharacterCreation = async () => {
+        await rpc.callClient(CharacterSelectionConstants.RPC.CREATE_CHARACTER);
     };
 
     render() {
@@ -118,4 +120,10 @@ class CharacterSelection extends PureComponent<Props> {
     }
 };
 
-export default withStyles(styles)(CharacterSelection);
+const WithTheme = ({ classes }) => (
+    <MuiThemeProvider theme={ theme }>
+        <CharacterSelection classes={ classes } />
+    </MuiThemeProvider>
+)
+
+export default hot(withStyles(styles)(WithTheme));

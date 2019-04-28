@@ -106,17 +106,24 @@ export default class CharacterSelectionScene {
             return this.updateCamera;
         });
 
+        mp.gui.chat.push('register CREATE_CHRACTER');
         register(
             CharacterSelectionConstants.RPC.CREATE_CHARACTER,
             () => {
+                mp.gui.chat.push('START_CHARACTER_CREATION_SCENE');
                 this.end();
                 call(CharacterSelectionConstants.RPC.START_CHARACTER_CREATION_SCENE);
             },
         );
 
+        let unhookCurrentRender;
         register(
             CharacterSelectionConstants.RPC.SELECT_CHARACTER,
             async (characterId: number) => {
+                if (unhookCurrentRender) {
+                    unhookCurrentRender();
+                    unhookCurrentRender = null;
+                }
                 this.selectedCharacterId = characterId;
 
                 const { appearance }: Character = await callServer(
@@ -125,21 +132,24 @@ export default class CharacterSelectionScene {
                 );
 
                 let direction = -1;
-                hookEvent(GameConstants.Events.RENDER, unhook => () => {
-                    const alpha = this.player.getAlpha();
-                    if (direction > 0 && alpha === 255) {
-                        unhook();
-                        return;
-                    }
-                    if (direction < 0 && !alpha) {
-                        PlayerManager.updateCharacterAppearance(
-                            JSON.parse(appearance) as CharacterAppearance
+                hookEvent(GameConstants.Events.RENDER, unhook => {
+                    unhookCurrentRender = unhook;
+                    return () => {
+                        const alpha = this.player.getAlpha();
+                        if (direction > 0 && alpha === 255) {
+                            unhook();
+                            return;
+                        }
+                        if (direction < 0 && !alpha) {
+                            PlayerManager.updateCharacterAppearance(
+                                JSON.parse(appearance) as CharacterAppearance
+                            );
+                            direction = 1;
+                        }
+                        this.player.setAlpha(
+                            Math.min(255, Math.max(0, alpha + 51 * direction))
                         );
-                        direction = 1;
                     }
-                    this.player.setAlpha(
-                        Math.min(255, Math.max(0, alpha + 51 * direction))
-                    );
                 })
             }
         );

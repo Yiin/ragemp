@@ -6,3 +6,5 @@ import { callServer } from 'rage-rpc';
 export const log = (...args) => {
     callServer('log', args);
 };
+
+global.console = { log };

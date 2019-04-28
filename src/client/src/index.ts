@@ -3,7 +3,7 @@ import 'rage-rpc';
 
 import './sentry'; // error tracking
 import './vendors/rage-editor';
-// import './vendors/fly';
+import './vendors/fly';
 import { containerPromises } from './container';
 import { log } from './debug';
 
@@ -20,6 +20,8 @@ const init = async () => {
     await import('./scenes/character-creation');
     await import('./scenes/character-selection');
     await import('./dialogs/storylines');
+
+    console.log('test');
     
     log('awaiting container promises');
     await Promise.all(containerPromises);

@@ -65,7 +65,7 @@ const Index = ({ classes }) => {
                 />
                 <SceneOption label="Parents" to="/parents" />
                 <SceneOption label="Features" to="/features" />
-                <SceneOption label="Appearance" to="/appearance"  />
+                <SceneOption label="Appearance" to="/appearance" />
                 <SceneOption label="Hair & Colors" to="/hair-and-colors" />
             </List>
             <Divider />

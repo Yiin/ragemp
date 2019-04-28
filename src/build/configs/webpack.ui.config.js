@@ -32,7 +32,6 @@ module.exports = (
         },
         entry: [
             isDevelopmentEnv && '@babel/polyfill',
-            isDevelopmentEnv && './client/UserInterface/browser-mocks.js',
             `./client/UserInterface/${uiName}/index.js`,
             isDevelopmentEnv && `webpack-hot-middleware/client?path=${domain}/${uiName}__webpack_hmr&timeout=20000`,
         ].filter(Boolean),

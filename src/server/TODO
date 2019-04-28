@@ -1,5 +1,5 @@
 General:
-  ☐ Use external error logging instead of console.log() @started(19-04-04 18:36)
+  ☐ Use external error logging instead of console.log()
     Possible option: Sentry
     ✔ Client side @done(19-04-04 22:50)
     ☐ Server side
@@ -7,7 +7,14 @@ General:
   ☐ Setup server side debugging (for VS Code)
   ✔ In-game hot reloading @done(19-04-23 23:34)
   ☐ Command to go back to character selection. @high 
-  ☐ Investigate why rage-rpc tests are failing & why it is not working when react-hot-loader is present. @critical 
+  ✔ Investigate why rage-rpc tests are failing & why it is not working when react-hot-loader is present. @critical @done(19-04-29 02:02)
+UI:
+  ☐ Generic theme for UI components @started(19-04-29 02:04)
+    ☐ Color palette
+    ☐ Titles
+    ☐ Text
+    ☐ Icons
+    ☐ Buttons
 Auth:
   Login:
     ✔ Remember me box @done(19-03-25 02:10)

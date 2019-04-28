@@ -15,6 +15,10 @@ mp.events.add('ui', name => {
     UIManager.show(name);
 });
 
+mp.events.add('test', () => {
+    console.log('test called');
+})
+
 mp.events.add('ped.create', model => {
     const {
         position,

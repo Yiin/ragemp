@@ -39,6 +39,7 @@ export default class AuthScene {
      * Player is ready to play, ask him to authenticate himself.
      */
     authenticatePlayer(playerMp: PlayerMp) {
+        console.log('PLAYER_READY_FOR_AUTHENTICATION');
         playerMp.call(AuthConstants.Events.PLAYER_READY_FOR_AUTHENTICATION);
     }
 
