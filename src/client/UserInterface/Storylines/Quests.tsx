@@ -57,7 +57,7 @@ const Quests = ({ classes }) => {
                 { open ? <ExpandLess /> : <ExpandMore /> }
             </ListItem>
             <Collapse in={ open } timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
+                <List disablePadding>
                     <ListItem button className={ classes.nested }>
                         <ListItemIcon>
                             <StarBorder />

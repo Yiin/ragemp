@@ -149,6 +149,7 @@ export default class CharacterCreationScene {
         );
     }
 
+    @handleRPC(CharacterCreationConstants.RPC.CANCEL_CHARACTER_CREATION)
     @handleEvent(CharacterCreationConstants.Events.CHARACTER_CREATED)
     onCharacterCreated() {
         this.end();

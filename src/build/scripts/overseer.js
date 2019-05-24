@@ -6,7 +6,8 @@ const
     chokidar = require('chokidar'),
     ipc = require('node-ipc'),
     chalk = require('chalk'),
-    findUp = require('find-up')
+    findUp = require('find-up'),
+    readline = require('readline')
 ;
 
 let server;
@@ -57,8 +58,8 @@ const buildProcesses = {
     source: null,
 };
 
-const sourceHandler = type => async () => {
-    if (server) {
+const sourceHandler = (type, { ignoreServer = false } = {}) => async () => {
+    if (!ignoreServer && server) {
         if (server.notifyBeforeKill) {
             log('Gently killing server...');
             await server.notifyBeforeKill();
@@ -72,11 +73,16 @@ const sourceHandler = type => async () => {
         buildProcesses[type].kill('SIGKILL');
     }
 
-    buildProcesses[type] = spawn(
+    const buildProcess = spawn(
         'npm.cmd', ['run', `build:${type}`],
         { stdio: 'inherit' },
     );
 
+    if (ignoreServer) {
+        return;
+    }
+
+    buildProcesses[type] = buildProcess;
     buildProcesses[type].on('close', (code, signal) => {
         if (signal === 'SIGKILL') {
             return;
@@ -85,6 +91,7 @@ const sourceHandler = type => async () => {
 
         if (server) {
             server.kill('SIGKILL');
+            server = undefined;
         }
 
         if (code === 2) {
@@ -98,24 +105,26 @@ const sourceHandler = type => async () => {
             return;
         }
 
-        log('Starting server...');
-        server = spawn(SERVER_EXE, [], {
-            stdio: 'inherit',
-            cwd: path.dirname(SERVER_EXE),
-        });
+        if (!server) {
+            log('Starting server...');
+            server = spawn(SERVER_EXE, [], {
+                stdio: 'inherit',
+                cwd: path.dirname(SERVER_EXE),
+            });
 
-        server.on('close', () => {
-            server = undefined;
-        });
+            server.on('close', () => {
+                server = undefined;
+            });
 
-        ipc.connectTo('ragemp-server', () => {
-            ipc.of['ragemp-server'].on('connect', () => {
-                server.notifyBeforeKill = () => new Promise(resolve => {
-                    killResolver = resolve;
-                    ipc.of['ragemp-server'].emit('death');
+            ipc.connectTo('ragemp-server', () => {
+                ipc.of['ragemp-server'].on('connect', () => {
+                    server.notifyBeforeKill = () => new Promise(resolve => {
+                        killResolver = resolve;
+                        ipc.of['ragemp-server'].emit('death');
+                    });
                 });
             });
-        });
+        }
     });
 }
 
@@ -131,7 +140,7 @@ spawn(
 );
 
 for (const [watcher, handler] of [
-    [null, sourceHandler('ui')],
+    [uiSourceWatcher, sourceHandler('ui', { ignoreServer: true })],
     [clientSourceWatcher, sourceHandler('client')],
     [serverSourceWatcher, sourceHandler('server')],
     [sharedSourceWatcher, sourceHandler('source')],
@@ -147,3 +156,15 @@ for (const [watcher, handler] of [
         watcher.on('all', handler);
     });
 }
+
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
+process.stdin.on('keypress', (str, key) => {
+    if (key.ctrl && key.name === 'c') {
+        process.exit();
+    } else {
+        if (key.name === 'space') {
+            sourceHandler('ui')();
+        }
+    }
+});

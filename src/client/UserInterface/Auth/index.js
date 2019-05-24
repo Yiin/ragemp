@@ -38,3 +38,7 @@ const Bridge = () => {
 ReactDOM.render(
     <Bridge />
 , document.getElementById('main'));
+
+if (module.hot) {
+    module.hot.accept();
+}

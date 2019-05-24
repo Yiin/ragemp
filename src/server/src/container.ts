@@ -7,9 +7,9 @@ const container = new Container();
 export const bind = () => target => {
     try {
         container.bind(target).to(target).inSingletonScope();
-        console.log(chalk`[{green Loaded}]`, target.name);
+        console.log(chalk`[{blueBright ragemp}][{green Loaded}]`, target.name);
     } catch (e) {
-        console.log(chalk`[{red Module failed to load}]`, target.name);
+        console.log(chalk`[{blueBright ragemp}][{red Module failed to load}]`, target.name);
     }
 };
 

@@ -17,7 +17,7 @@ export const theme = createMuiTheme({
             selected: fade(grey[600], .7),
             hover: fade(grey[600], .7), //fade(grey[900], .6),
         },
-        primary: teal,
+        primary: amber,
         error: {
             main: grey[900],
         },

@@ -22,28 +22,28 @@ export default class CharacterSelectionModule {
 
     @RPC(SharedConstants.CharacterCreation.RPC.CREATE_CHARACTER)
     async createCharacter(data: CharacterAppearance, { player: playerMp }: PLI) {
-        const NAME_REGEX: RegExp = /^([A-Za-z]{3,}) ([A-Za-z]{3,})$/;
+        const NAME_REGEX: RegExp = /^\s*([A-Za-z]{3,}) ([A-Za-z]{3,})\s*$/;
 
         await validate(data, {
             name: [
                 isRequired('Please name your character'),
                 (value: string) => NAME_REGEX.test(value)
                     ? null
-                    : `This name doesn't look right`,
+                    : '<first name> <last name> (both at least 3 letters)',
             ],
         });
 
         const { name, ...appearance } = data;
         const user = this.playersRepository.getUser(playerMp);
 
-        console.log(await user);
-
         await this.characterEntityRepository.save(
             Character.create({
                 user,
                 name: name
+                    .trim()
                     .toLocaleLowerCase()
                     .replace(/\b\w/g, l => l.toLocaleUpperCase()),
+                    // Capitalize first and last name
                 appearance: JSON.stringify(appearance),
             }),
         );

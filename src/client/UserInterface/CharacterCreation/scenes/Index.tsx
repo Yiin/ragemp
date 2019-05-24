@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import CreateIcon from '@material-ui/icons/PersonAdd';
+import IconLeft from '@material-ui/icons/KeyboardArrowLeft';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import { Context as CharacterCreationContext } from '../context';
@@ -14,8 +15,9 @@ import SelectionOption from '../components/SelectionOption';
 import SceneOption from '../components/SceneOption';
 import SimpleOption from '../components/SimpleOption';
 import NameInputDialog from '../components/NameInputDialog';
-import { setGender, setRandomFeatures, setFeature, setHeadOverlayValue, setHeadOverlayOpacity } from '../asm';
+import { setGender, setRandomFeatures, setHeadOverlayValue, setHeadOverlayOpacity } from '../asm';
 import { disabledOverlaysForGender } from '../data/head-overlays';
+import { CharacterCreationConstants } from '~/constants/character-creation';
 
 const styles = () => ({
     fixVerticalAlignment: {
@@ -47,8 +49,12 @@ const Index = ({ classes }) => {
         toggleDisplayNameInputDialog(false);
     };
 
-    const randomize = async () => {
+    const randomize = () => {
         dispatch(setRandomFeatures(gender));
+    };
+
+    const showCharacterSelectionScene = () => {
+        rpc.callClient(CharacterCreationConstants.RPC.CANCEL_CHARACTER_CREATION);
     };
 
     return (
@@ -81,6 +87,15 @@ const Index = ({ classes }) => {
                 <ListItemText
                     classes={ { primary: classes.fixVerticalAlignment } }
                     primary="Create"
+                />
+            </ListItem>
+            <ListItem button onClick={ showCharacterSelectionScene }>
+                <ListItemIcon>
+                    <IconLeft />
+                </ListItemIcon>
+                <ListItemText
+                    classes={ { primary: classes.fixVerticalAlignment } }
+                    primary="Cancel"
                 />
             </ListItem>
 

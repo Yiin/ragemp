@@ -33,28 +33,6 @@ export default class CharacterSelectionScene {
     );
     private unhookRender: () => void;
 
-    @handleRPC(AuthConstants.RPC.AFTER_PLAYER_LOGIN)
-    /**
-     * This is the entry point (regarding scenes) after player logs in.
-     */
-    async afterPlayerLogin(auth: LoginResponse) {
-        mp.storage.data.auth = auth;
-        mp.storage.flush();
-        // Save auth token
-
-        const { length: charactersCount }: Character[] = await callServer(
-            SharedConstants.User.RPC.GET_CHARACTERS
-        );
-
-        if (charactersCount === 0) {
-            call(CharacterSelectionConstants.RPC.START_CHARACTER_CREATION_SCENE);
-            // Forward player to character creation scene because he has no characters
-        } else {
-            this.start();
-            // Start character selection scene
-        }
-    }
-
     @handleRPC(CharacterSelectionConstants.RPC.START_CHARACTER_SELECTON_SCENE)
     /**
      * Camera & UI

@@ -13,55 +13,55 @@ import { CharacterStoryline } from './CharacterStoryline';
 
 @Entity('Characters')
 export class Character extends BaseEntity {
-    static create(entity: DeepPartial<Character>) {
-        return super.create(entity) as Character;
+    static create<Character>(entity: DeepPartial<Character>) {
+        return super.createEntity(this, entity);
     }
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @ManyToOne(type => User, user => user.characters)
-    user: Promise<User>;
+    user!: Promise<User>;
 
     @OneToMany(type => CharacterStoryline, storyline => storyline.character)
-    storylines: CharacterStoryline[];
+    storylines!: CharacterStoryline[];
 
     @Column()
-    name: string;
+    name!: string;
 
     @Column('text')
-    appearance: string;
+    appearance!: string;
 
     @Column('integer', { default: 0 })
-    money: number;
+    money!: number;
 
     @Column('float', { default: 0 })
-    x: number;
+    x!: number;
 
     @Column('float', { default: 0 })
-    y: number;
+    y!: number;
 
     @Column('float', { default: 0 })
-    z: number;
+    z!: number;
 
     @Column('float', { default: 0 })
-    heading: number;
+    heading!: number;
 
     @Column('timestamp', {
         default: null,
         onUpdate: 'CURRENT_TIMESTAMP',
         transformer: {
-            from(value) {
+            from(value: Date) {
                 if (value) {
                     value.setTime(value.getTime() - value.getTimezoneOffset() * 6e4);
                     // Reset time from local to UTC
                 }
                 return value;
             },
-            to(value) {
+            to(value: Date) {
                 return value;
             }
         }
     })
-    lastPlayed: string;
+    lastPlayed!: string;
 }

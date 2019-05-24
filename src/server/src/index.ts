@@ -18,13 +18,13 @@ const init = async () => {
     const connect = async (tries = 0) => {
         try {
             await createConnection(TYPE_ORM_CONFIG)
-            console.log(chalk`[{green Database}] Connected successfully!`);
+            console.log(chalk`[{blueBright ragemp}][{green Database}] Connected successfully!`);
         } catch (e) {
             if (tries < 3) {
-                console.log(chalk`[{yellow Database}] Trying to reconnect...`);
+                console.log(chalk`[{blueBright ragemp}][{yellow Database}] Trying to reconnect...`);
                 await connect(tries + 1);
             } else {
-                console.log(chalk`[{red Database}] ${e.message}`);
+                console.log(chalk`[{blueBright ragemp}][{red Database}] ${e.message}`);
                 process.exit();
             }
         }

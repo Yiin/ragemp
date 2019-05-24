@@ -39,7 +39,6 @@ export default class AuthScene {
      * Player is ready to play, ask him to authenticate himself.
      */
     authenticatePlayer(playerMp: PlayerMp) {
-        console.log('PLAYER_READY_FOR_AUTHENTICATION');
         playerMp.call(AuthConstants.Events.PLAYER_READY_FOR_AUTHENTICATION);
     }
 
@@ -90,7 +89,7 @@ export default class AuthScene {
     @RPC(AuthConstants.RPC.SUBMIT_LOGIN_FORM)
     /**
      * Player is trying to login using username & password combination.
-     * Return token if users asked for it ("remember" flag).
+     * Return token if user checked `remember me` checkbox.
      */
     async handleLogin(
         formValues: LoginFormValues,

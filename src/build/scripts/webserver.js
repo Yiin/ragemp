@@ -57,7 +57,7 @@ webpackConfigs.forEach(config => {
             app.get(`/${uiName}`, (req, res) =>
                 res.sendFile(`${outputPath}/index.html`)
             );
-            console.log(chalk`[{green ready}] ${uiName}`);
+            console.log(chalk`[{blue webserver}][{green ready}] ${uiName}`);
             resolve();
         });
     }));

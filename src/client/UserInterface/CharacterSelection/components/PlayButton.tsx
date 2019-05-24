@@ -27,7 +27,7 @@ const PlayButton = ({ classes }) => {
             variant="contained"
             onClick={ handleClickPlay }
         >
-            Play Now
+            Play Now!!!
         </Button>
     );
 };

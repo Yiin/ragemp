@@ -21,8 +21,6 @@ const init = async () => {
     await import('./scenes/character-selection');
     await import('./dialogs/storylines');
 
-    console.log('test');
-    
     log('awaiting container promises');
     await Promise.all(containerPromises);
     

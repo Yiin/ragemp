@@ -37,9 +37,7 @@ const Auth = ({ classes }) => {
         if (scene !== state.scene) {
             switch (scene) {
                 case 'login':
-                    dispatch(setLoginErrors({
-                        username: 'Some error message',
-                    }));
+                    dispatch(setLoginErrors(null));
                     break;
                 case 'registration':
                     dispatch(setRegistrationErrors(null));

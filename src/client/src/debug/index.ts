@@ -7,4 +7,4 @@ export const log = (...args) => {
     callServer('log', args);
 };
 
-global.console = { log };
+global.console.log = log;

@@ -1,9 +1,12 @@
 import { injectable } from 'inversify';
-import * as rpc from 'rage-rpc';
-import { SharedConstants } from 'Shared/constants';
-import { AuthConstants } from '~/constants/auth';
+import { call, callServer } from 'rage-rpc';
 
+import { SharedConstants } from 'Shared/constants';
+
+import { AuthConstants } from '~/constants/auth';
+import { CharacterSelectionConstants } from '~/constants/character-selection';
 import UIManager from '~/managers/ui';
+import { handleRPC } from '~/utils/handle-rpc';
 import { handleEvent } from '~/utils/handle-event';
 import { bind } from '~/container';
 import { log } from '~/debug';
@@ -16,12 +19,11 @@ export default class AuthScene {
      * Try to login with saved token if we have one, otherwise show auth forms.
      */
     async start() {
-        log('ready for auth');
         const { auth } = mp.storage.data;
 
         if (auth) {
             const { data, token } = auth;
-            const isTokenValid = await rpc.callServer(
+            const isTokenValid = await callServer(
                 SharedConstants.Auth.RPC.SUBMIT_AUTH_TOKEN, {
                     token,
                     data,
@@ -29,7 +31,7 @@ export default class AuthScene {
             );
 
             if (isTokenValid) {
-                rpc.call(AuthConstants.RPC.AFTER_PLAYER_LOGIN, auth);
+                call(AuthConstants.RPC.AFTER_PLAYER_LOGIN, auth);
                 return;
             }
         }
@@ -39,14 +41,37 @@ export default class AuthScene {
         mp.gui.cursor.show(true, true);
     }
 
-    @handleEvent(AuthConstants.Events.AFTER_PLAYER_LOGIN)
+    /**
+     * Decide which scene should be shown next.
+     */
+    async decideNextScene(auth: LoginResponse) {
+        mp.storage.data.auth = auth;
+        mp.storage.flush();
+        // Save auth token
+
+        const { length: charactersCount }: Character[] = await callServer(
+            SharedConstants.User.RPC.GET_CHARACTERS
+        );
+
+        if (charactersCount === 0) {
+            call(CharacterSelectionConstants.RPC.START_CHARACTER_CREATION_SCENE);
+            // Forward player to character creation scene because he has no characters
+        } else {
+            call(CharacterSelectionConstants.RPC.START_CHARACTER_SELECTION_SCENE);
+            // Start character selection scene
+        }
+    }
+
+    @handleRPC(AuthConstants.RPC.AFTER_PLAYER_LOGIN)
     /**
      * We succesfully logged in, hide auth forms.
      */
-    end() {
+    end(auth: LoginResponse) {
         UIManager.hide('Auth');
         mp.gui.chat.activate(true);
         mp.gui.cursor.show(false, false);
+
+        this.decideNextScene(auth);
     }
 }
 

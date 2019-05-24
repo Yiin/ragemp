@@ -13,7 +13,7 @@ import { SharedConstants } from 'Shared/constants';
 import { Context } from '../context';
 import { CharacterCreationConstants } from '~/constants/character-creation';
 
-const NameInputDialog = ({ open, onClose, onSubmit }) => {
+const NameInputDialog = ({ open, onClose }) => {
     const [name, setName] = useState('');
     const [error, setError] = useState();
     const [submitting, setSubmitting] = useState(false);
@@ -23,7 +23,6 @@ const NameInputDialog = ({ open, onClose, onSubmit }) => {
     const handleSubmit = async () => {
         setSubmitting(true);
         try {
-            console.log('calling', SharedConstants.CharacterCreation.RPC.CREATE_CHARACTER)
             await rpc.callServer(
                 SharedConstants.CharacterCreation.RPC.CREATE_CHARACTER, {
                 ...state,
@@ -32,7 +31,6 @@ const NameInputDialog = ({ open, onClose, onSubmit }) => {
             // @ts-ignore mp.trigger is available in CEF environment
             mp.trigger(CharacterCreationConstants.Events.CHARACTER_CREATED);
         } catch (e) {
-            console.log(e);
             setError(e.name);
         }
         setSubmitting(false);
