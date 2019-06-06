@@ -1,0 +1,74 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "useJSXTextNode": true,
+        "project": "./tsconfig.json",
+        "tsconfigRootDir": ".",
+    },
+    "env": {
+        "browser": true,
+        "jest/globals": true
+    },
+    "plugins": ["react", "@typescript-eslint", "react-hooks", "jest"],
+    "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript",
+    ],
+    "settings": {
+        "import/resolver": {
+            "alias": [
+                ["~", "./"],
+                ["Shared", "../shared"]
+            ]
+        }
+    },
+    "rules": {
+        "@typescript-eslint/no-object-literal-type-assertion": [
+            "error",
+            { "allowAsParameter": true }
+        ],
+        /**
+         * @description rules of eslint official
+         */
+        /**
+         * @bug https://github.com/benmosher/eslint-plugin-import/issues/1282
+         * "import/named" temporary disable.
+         */
+        "import/named": "off",
+        "import/prefer-default-export": "off", // Allow single Named-export
+        "no-unused-expressions": ["warn", {
+            "allowShortCircuit": true,
+            "allowTernary": true
+        }], // https://eslint.org/docs/rules/no-unused-expressions
+        
+        /**
+        * @description rules of @typescript-eslint
+        */
+        "@typescript-eslint/prefer-interface": "off", // also want to use "type"
+        "@typescript-eslint/explicit-function-return-type": "off", // annoying to force return type
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-member-accessibility": ["off"],
+        "@typescript-eslint/no-use-before-define": ["off"],
+        "@typescript-eslint/indent": ["warn", 2],
+        "object-curly-spacing": ["warn", "always"],
+        
+        /**
+        * @description rules of eslint-plugin-react
+        */
+        "react/jsx-filename-extension": ["warn", {
+            "extensions": [".jsx", ".tsx"]
+        }], // also want to use with ".tsx"
+        "react/prop-types": "off", // Is this incompatible with TS props type?
+        "react/jsx-uses-vars": 1,
+        "react/jsx-uses-react": 1,
+        "react/jsx-curly-spacing": [2, "always"],
+            
+        /**
+        * @description rules of eslint-plugin-react-hooks
+        */
+        "react-hooks/rules-of-hooks": "error"
+    }
+}
