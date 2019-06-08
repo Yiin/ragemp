@@ -55,8 +55,18 @@ const Auth: React.FC<Props> = ({ classes }) => {
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab disableRipple label="Login" value="login" />
-            <Tab disableRipple label="Register" value="registration" />
+            <Tab
+              className="login-tab"
+              disableRipple
+              label="Login"
+              value="login"
+            />
+            <Tab
+              className="registration-tab"
+              disableRipple
+              label="Register"
+              value="registration"
+            />
           </Tabs>
           { activeTab }
         </>
