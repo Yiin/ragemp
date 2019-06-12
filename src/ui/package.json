@@ -38,6 +38,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
+    "rage-rpc": "^0.3.0",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.0",
     "react-dev-utils": "^9.0.0",
@@ -136,6 +137,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@testing-library/react": "^8.0.1",
     "@types/enzyme": "^3.9.3",
     "@types/jest": "^24.0.12",
     "@types/material-ui": "^0.21.6",

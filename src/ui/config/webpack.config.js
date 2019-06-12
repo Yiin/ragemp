@@ -370,7 +370,7 @@ module.exports = function(webpackEnv) {
                 {
                   loader: 'ts-loader',
                   options: {
-                      transpileOnly: true,
+                    transpileOnly: true,
                   },
                 },
               ],
