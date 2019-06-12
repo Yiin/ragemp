@@ -1,2 +1,2 @@
-export const enum AuthRPC {
+export enum AuthRPC {
 };

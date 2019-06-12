@@ -1,5 +1,5 @@
 // https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
-export const enum VK {
+export enum VK {
     LBUTTON = 0x01,
     RBUTTON = 0x02,
     CANCEL = 0x03,

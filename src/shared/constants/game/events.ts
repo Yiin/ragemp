@@ -1,3 +1,3 @@
-export const enum GameEvents {
+export enum GameEvents {
     GAME_STARTED = 'gameStarted',
 };

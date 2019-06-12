@@ -1,3 +1,3 @@
-export const enum SentryRPC {
+export enum SentryRPC {
     CAPTURE_EXCEPTION = 'captureException',
 };

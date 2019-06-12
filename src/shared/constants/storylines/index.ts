@@ -1,3 +1,3 @@
-export const enum Storylines {
+export enum Storylines {
     TUTORIAL = 'STORYLINE_TUTORIAL',
 };

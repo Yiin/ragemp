@@ -1,4 +1,4 @@
-export const enum CharacterSelectionRPC {
+export enum CharacterSelectionRPC {
     START_CHARACTER_SELECTON_SCENE = 'startCharacterSelectionScene',
     END_CHARACTER_SELECTON_SCENE = 'endCharacterSelectionScene',
     START_CHARACTER_CREATION_SCENE = 'startCharacterCreationScene',

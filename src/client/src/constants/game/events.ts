@@ -1,4 +1,4 @@
-export const enum GameEvents {
+export enum GameEvents {
     BROWSER_CREATED = "browserCreated",
     BROWSER_DOM_READY = "browserDomReady",
     BROWSER_INPUT_FOCUS_CHANGED = "browserInputFocusChanged", // custom

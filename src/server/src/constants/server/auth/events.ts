@@ -1,3 +1,3 @@
-export const enum AuthEvents {
+export enum AuthEvents {
     USER_LOGIN = 'userLogin',
 };

@@ -1,5 +1,5 @@
 import { AuthEvents } from './events';
 
-export namespace AuthConstants {
-    export import Events = AuthEvents;
+export const AuthConstants = {
+    Events: AuthEvents,
 };

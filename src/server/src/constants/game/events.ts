@@ -1,4 +1,4 @@
-export const enum Events {
+export enum Events {
     ENTITY_CREATED = 'entityCreated',
     ENTITY_DESTROYED = 'entityDestroyed',
     ENTITY_MODEL_CHANGE = 'entityModelChange',

@@ -1,3 +1,3 @@
-export const enum CharacterCreationEvents {
+export enum CharacterCreationEvents {
     CHARACTER_CREATED = 'characterCreated',
 };

@@ -1,5 +1,5 @@
 import { GameEvents } from './events';
 
-export namespace GameConstants {
-    export import Events = GameEvents;
-}
+export const GameConstants = {
+    Events: GameEvents,
+};

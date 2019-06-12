@@ -1,2 +1,2 @@
-export const enum AuthEvents {
+export enum AuthEvents {
 };

@@ -1,5 +1,5 @@
 import { AuthConstants } from './auth';
 
-export namespace ServerConstants {
-    export import Auth = AuthConstants;
-}
+export const ServerConstants = {
+    Auth: AuthConstants,
+};

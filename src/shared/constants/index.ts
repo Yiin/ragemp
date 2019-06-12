@@ -7,13 +7,13 @@ import { GameConstants } from './game';
 import { PlayerVariables as _PlayerVariables } from './player-variables';
 import { Storylines as _Storylines } from './storylines';
 
-export namespace SharedConstants {
-    export import Sentry = SentryConstants;
-    export import Auth = AuthConstants;
-    export import CharacterCreation = CharacterCreationConstants;
-    export import CharacterSelection = CharacterSelectionConstants;
-    export import User = UserConstants;
-    export import Game = GameConstants;
-    export import PlayerVariables = _PlayerVariables;
-    export import Storylines = _Storylines;
+export const SharedConstants = {
+    Sentry: SentryConstants,
+    Auth: AuthConstants,
+    CharacterCreation: CharacterCreationConstants,
+    CharacterSelection: CharacterSelectionConstants,
+    User: UserConstants,
+    Game: GameConstants,
+    PlayerVariables: _PlayerVariables,
+    Storylines: _Storylines,
 }

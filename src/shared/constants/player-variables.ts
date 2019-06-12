@@ -1,3 +1,3 @@
-export const enum PlayerVariables {
+export enum PlayerVariables {
     CHARACTER_ID = 'characterId',
 };

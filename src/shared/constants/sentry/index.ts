@@ -1,5 +1,5 @@
 import { SentryRPC } from './rpc';
 
-export namespace SentryConstants {
-    export import RPC = SentryRPC;
-}
+export const SentryConstants = {
+    RPC: SentryRPC,
+};
