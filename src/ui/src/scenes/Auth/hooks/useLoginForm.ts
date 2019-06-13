@@ -3,7 +3,7 @@ import rpc from 'rage-rpc';
 
 import { SharedConstants } from 'Shared/constants';
 
-import useInput from '../hooks/useInput';
+import useInput from './useInput';
 import AuthContext from '../context/context';
 
 const useLoginForm = (context: {} = {}) => {

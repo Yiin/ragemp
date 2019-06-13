@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import * as rpc from 'rage-rpc';
+import rpc from 'rage-rpc';
 
 import { SharedConstants } from 'Shared/constants';
 

@@ -1,21 +1,18 @@
 import React from 'react';
 import { Classes } from 'jss';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import RegistrationIcon from '@material-ui/icons/KeyboardArrowRight';
+import { Theme } from '@material-ui/core';
 
 import useRegistrationForm from '../hooks/useRegistrationForm';
 
-const styles = () => ({
+const styles = (theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column',
-  },
-  description: {
-    paddingTop: '15px',
-    paddingBottom: '10px',
+    paddingTop: theme.spacing.unit * 2,
   },
   button: {
     marginTop: '10px',
@@ -45,16 +42,6 @@ const Registration: React.FC<Props> = ({ classes }) => {
 
   return (
     <div className={ classes.root }>
-      <div className={ classes.description }>
-        <Typography variant="body2">
-          Registration
-        </Typography>
-
-        <Typography variant="body1">
-          Create new account if you haven't registered yet.
-        </Typography>
-      </div>
-
       <TextField
         value={ username }
         onChange={ setUsername }

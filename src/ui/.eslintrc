@@ -59,7 +59,7 @@
         * @description rules of eslint-plugin-react
         */
         "react/jsx-filename-extension": ["warn", {
-            "extensions": [".jsx", ".tsx"]
+            "extensions": [".js", ".tsx"]
         }], // also want to use with ".tsx"
         "react/prop-types": "off", // Is this incompatible with TS props type?
         "react/jsx-uses-vars": 1,

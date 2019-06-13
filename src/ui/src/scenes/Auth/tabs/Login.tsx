@@ -1,18 +1,19 @@
 import React from 'react';
 import { Classes } from 'jss';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import LoginIcon from '@material-ui/icons/KeyboardArrowRight';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
 
 import useLoginForm from '../hooks/useLoginForm';
 
-const styles = () => ({
+const styles = (theme: Theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column',
+    paddingTop: theme.spacing.unit * 2,
   },
   description: {
     paddingTop: '15px',
@@ -46,16 +47,6 @@ const Login: React.FC<Props> = ({ classes }) => {
 
   return (
     <div className={ classes.root }>
-      <div className={ classes.description }>
-        <Typography variant="body2">
-          Login
-        </Typography>
-
-        <Typography variant="body1">
-          Please enter your credentials.
-        </Typography>
-      </div>
-
       <TextField
         value={ username }
         onChange={ setUsername }

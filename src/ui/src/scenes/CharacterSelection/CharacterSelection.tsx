@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Classes } from 'jss';
-import * as rpc from 'rage-rpc';
+import rpc from 'rage-rpc';
 import withStyles, {
   StyleRulesCallback,
 } from '@material-ui/core/styles/withStyles';

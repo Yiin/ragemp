@@ -21,7 +21,7 @@ export const createContextHOC = (
   );
 
   return (
-    <context.Provider value={{ state, dispatch }}>{children}</context.Provider>
+    <context.Provider value={ { state, dispatch } }>{children}</context.Provider>
   );
 };
 
