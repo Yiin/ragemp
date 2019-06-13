@@ -1,7 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-type Value<T> = string | number | boolean | T;
-type ChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>;
+type ChangeEvent = React.ChangeEvent<
+  HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement
+>;
 
 function useInput<T>(initialValue: T): [T, (e: ChangeEvent) => void] {
   const [value, setValue] = useState<any>(initialValue);

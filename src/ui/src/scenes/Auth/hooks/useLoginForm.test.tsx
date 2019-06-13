@@ -5,6 +5,8 @@ import { nockRPC } from '~/test-utils/nock-rpc';
 import useLoginForm from './useLoginForm';
 import { SharedConstants } from '~/../../shared/constants';
 
+type UseLoginForm = typeof useLoginForm;
+
 type HookProps<T extends () => any = any> = {
   hook: ReturnType<T>;
 };
@@ -32,12 +34,10 @@ describe('Login tab', () => {
       });
 
     const wrapper = shallow(<HookWrapper hook={ useLoginForm } />);
-
-    const { submitForm } = useHook<typeof useLoginForm>(wrapper);
+    const { submitForm } = useHook<UseLoginForm>(wrapper);
 
     await submitForm();
-    
-    const { errors } = useHook<typeof useLoginForm>(wrapper);
+    const { errors } = useHook<UseLoginForm>(wrapper);
 
     expect(errors).toEqual({
       username: 'foo',
@@ -57,7 +57,7 @@ describe('Login tab', () => {
       />
     );
 
-    const { username, password } = useHook<typeof useLoginForm>(wrapper);
+    const { username, password } = useHook<UseLoginForm>(wrapper);
 
     expect({
       username,

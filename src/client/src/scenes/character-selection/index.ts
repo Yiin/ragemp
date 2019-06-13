@@ -5,7 +5,6 @@ import { Character } from 'Shared/entity';
 import { SharedConstants } from 'Shared/constants';
 
 import { GameConstants } from '~/constants/game';
-import { AuthConstants } from '~/constants/auth';
 import { CharacterSelectionConstants } from '~/constants/character-selection';
 import CameraManager from '~/managers/camera';
 import UIManager from '~/managers/ui';
@@ -84,9 +83,8 @@ export default class CharacterSelectionScene {
             return this.updateCamera;
         });
 
-        mp.gui.chat.push('register CREATE_CHRACTER');
         register(
-            CharacterSelectionConstants.RPC.CREATE_CHARACTER,
+            SharedConstants.CharacterSelection.RPC.CREATE_CHARACTER,
             () => {
                 mp.gui.chat.push('START_CHARACTER_CREATION_SCENE');
                 this.end();
@@ -96,7 +94,7 @@ export default class CharacterSelectionScene {
 
         let unhookCurrentRender;
         register(
-            CharacterSelectionConstants.RPC.SELECT_CHARACTER,
+            SharedConstants.CharacterSelection.RPC.SELECT_CHARACTER,
             async (characterId: number) => {
                 if (unhookCurrentRender) {
                     unhookCurrentRender();
@@ -133,7 +131,7 @@ export default class CharacterSelectionScene {
         );
 
         register(
-            CharacterSelectionConstants.RPC.START_GAME,
+            SharedConstants.CharacterSelection.RPC.START_GAME,
             async () => {
                 callServer(
                     SharedConstants.CharacterSelection.RPC.START_GAME,
@@ -186,8 +184,9 @@ export default class CharacterSelectionScene {
         mp.gui.cursor.show(false, false);
         mp.gui.chat.activate(true);
         
-        unregister(CharacterSelectionConstants.RPC.SELECT_CHARACTER);
-        unregister(CharacterSelectionConstants.RPC.CREATE_CHARACTER);
+        unregister(SharedConstants.CharacterSelection.RPC.SELECT_CHARACTER);
+        unregister(SharedConstants.CharacterSelection.RPC.CREATE_CHARACTER);
+        unregister(SharedConstants.CharacterSelection.RPC.START_GAME);
         
         this.unhookRender();
         this.camera.setActiveCamera(false);
